@@ -16,5 +16,8 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+Route::get('/roles' , function(){
+    return view('test.roles'); // El punto indica que entre a la carpeta 'test'
+});
 
 require __DIR__.'/auth.php';
