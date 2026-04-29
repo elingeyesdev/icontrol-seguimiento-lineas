@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('ruta', function (Blueprint $table) {
             $table->id();
             $table->string('origen', 50);
+            $table->foreignId('paradas_id')->constrained('paradas')->onDelete('cascade');
             $table->string('destino', 50);
             $table->string('nombre_ruta', 50);
             $table->timestamps();
