@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property $created_at
  * @property $updated_at
  *
- * @property Rutum[] $rutas
+ * @property Ruta[] $rutas
  * @package App
  * @mixin \Illuminate\Database\Eloquent\Builder
  */
@@ -31,11 +31,11 @@ class Parada extends Model
 
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function rutas()
     {
-        return $this->hasMany(\App\Models\Rutum::class, 'id', 'paradas_id');
+        return $this->belongsToMany(\App\Models\Ruta::class, 'parada_ruta', 'parada_id', 'ruta_id');
     }
     
 }

@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('turno', function (Blueprint $table) {
+        Schema::create('controlador', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('interno_id')->constrained('interno')->onDelete('cascade');
-            $table->foreignId('ruta_id')->constrained('ruta')->onDelete('cascade');
-            $table->datetime('hora_inicio');
-            $table->datetime('hora_fin');
-            $table->date('fecha_laboral');
+            $table->string('nombre', 30);
+            $table->string('apellido', 30);
+            $table->string('telefono', 15);
+            $table->string('correo', 50)->unique();
+            $table->string('ci', 20)->unique();
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('turno');
+        Schema::dropIfExists('controlador');
     }
 };

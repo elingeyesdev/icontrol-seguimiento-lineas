@@ -55,9 +55,7 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-        $roles = Role::all();
-        $userRoles = $user->roles->pluck('name')->toArray();
-        return view('users.edit', compact('user', 'roles', 'userRoles'));
+        return view('users.edit', compact('user'));
     }
 
     public function update(Request $request, User $user)
@@ -65,7 +63,6 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,'.$user->id,
-            'roles' => 'required|array'
         ]);
 
         $data = [
@@ -79,7 +76,6 @@ class UserController extends Controller
         }
 
         $user->update($data);
-        $user->syncRoles($request->roles);
 
         return redirect()->route('users.index')->with('success', 'Usuario actualizado correctamente.');
     }

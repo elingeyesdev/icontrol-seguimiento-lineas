@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property $updated_at
  *
  * @property Dueño $dueño
- * @property Interno[] $internos
+ * @property Interno $interno
  * @package App
  * @mixin \Illuminate\Database\Eloquent\Builder
  */
@@ -45,11 +45,11 @@ class Micro extends Model
     }
     
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function internos()
+    public function interno()
     {
-        return $this->hasMany(\App\Models\Interno::class, 'micro_id', 'id');
+        return $this->hasOne(\App\Models\Interno::class, 'micro_id', 'id');
     }
     
 }

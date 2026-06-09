@@ -14,7 +14,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property $created_at
  * @property $updated_at
  *
- * @property Turno[] $turnos
+ * @property Turno $turno
+ * @property Parada[] $paradas
  * @package App
  * @mixin \Illuminate\Database\Eloquent\Builder
  */
@@ -30,15 +31,23 @@ class Ruta extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['origen', 'destino', 'nombre_ruta'];
+    protected $fillable = ['origen', 'destino', 'nombre_ruta', 'turno_id'];
 
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function turnos()
+    public function turno()
     {
-        return $this->hasMany(\App\Models\Turno::class, 'ruta_id', 'id');
+        return $this->belongsTo(\App\Models\Turno::class, 'turno_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function paradas()
+    {
+        return $this->belongsToMany(\App\Models\Parada::class, 'parada_ruta', 'ruta_id', 'parada_id');
     }
     
 }

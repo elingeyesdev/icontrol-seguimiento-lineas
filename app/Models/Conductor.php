@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Sanctum\HasApiTokens;
 
 class Conductor extends Model
 {
-    use HasFactory;
+    use HasApiTokens,HasFactory;
 
     protected $table = 'conductor';
 
@@ -18,4 +19,12 @@ class Conductor extends Model
         'correo',
         'ci',
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function internos()
+    {
+        return $this->belongsToMany(\App\Models\Interno::class, 'conductor_interno', 'conductor_id', 'interno_id');
+    }
 }

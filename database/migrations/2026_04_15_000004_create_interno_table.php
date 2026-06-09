@@ -15,8 +15,7 @@ return new class extends Migration
             $table->id();
             $estado_interno = ['activo', 'inactivo'];
             $table->enum('estado', $estado_interno)->default('inactivo');
-            $table->foreignId('micro_id')->constrained('micro'); 
-            $table->foreignId('conductor_id')->constrained('conductor');
+            $table->foreignId('micro_id')->unique()->constrained('micro')->onDelete('cascade'); 
             $table->datetime('fecha_ingreso');
             $table->timestamps();
         });

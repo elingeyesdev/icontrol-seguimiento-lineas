@@ -16,8 +16,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property $created_at
  * @property $updated_at
  *
- * @property Interno $interno
- * @property Ruta $ruta
+ * @property Interno[] $internos
+ * @property Ruta[] $rutas
+ * @property Asignacion[] $asignaciones
  * @package App
  * @mixin \Illuminate\Database\Eloquent\Builder
  */
@@ -33,23 +34,31 @@ class Turno extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['interno_id', 'ruta_id', 'hora_inicio', 'hora_fin', 'fecha_laboral'];
+    protected $fillable = ['hora_inicio', 'hora_fin', 'fecha_laboral'];
 
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function interno()
+    public function internos()
     {
-        return $this->belongsTo(\App\Models\Interno::class, 'interno_id', 'id');
+        return $this->belongsToMany(\App\Models\Interno::class, 'interno_turno', 'turno_id', 'interno_id');
     }
     
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function ruta()
+    public function rutas()
     {
-        return $this->belongsTo(\App\Models\Ruta::class, 'ruta_id', 'id');
+        return $this->hasMany(\App\Models\Ruta::class, 'turno_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function asignaciones()
+    {
+        return $this->hasMany(\App\Models\Asignacion::class, 'turno_id');
     }
     
 }

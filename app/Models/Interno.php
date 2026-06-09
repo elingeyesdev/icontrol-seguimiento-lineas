@@ -15,9 +15,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property $created_at
  * @property $updated_at
  *
- * @property Conductor $conductor
+ * @property Conductor[] $conductores
  * @property Micro $micro
  * @property Turno[] $turnos
+ * @property Asignacion[] $asignaciones
  * @package App
  * @mixin \Illuminate\Database\Eloquent\Builder
  */
@@ -33,15 +34,15 @@ class Interno extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['estado', 'micro_id', 'conductor_id', 'fecha_ingreso'];
+    protected $fillable = ['estado', 'micro_id', 'fecha_ingreso'];
 
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function conductor()
+    public function conductores()
     {
-        return $this->belongsTo(\App\Models\Conductor::class, 'conductor_id', 'id');
+        return $this->belongsToMany(\App\Models\Conductor::class, 'conductor_interno', 'interno_id', 'conductor_id');
     }
     
     /**
@@ -53,11 +54,19 @@ class Interno extends Model
     }
     
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function turnos()
     {
-        return $this->hasMany(\App\Models\Turno::class, 'interno_id', 'id');
+        return $this->belongsToMany(\App\Models\Turno::class, 'interno_turno', 'interno_id', 'turno_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function asignaciones()
+    {
+        return $this->hasMany(\App\Models\Asignacion::class, 'interno_id');
     }
     
 }

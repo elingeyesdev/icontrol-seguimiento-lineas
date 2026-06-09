@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Ejecutar RoleSeeder para crear roles y permisos
+        $this->command->info('Configurando roles y permisos...');
         $this->call(RoleSeeder::class);
 
         // Crear usuario admin
@@ -30,12 +31,16 @@ class DatabaseSeeder extends Seeder
 
         // Asignar rol admin
         $admin->assignRole('admin');
+        $this->command->info('Usuario Administrador verificado/creado.');
 
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
+        User::firstOrCreate([
             'email' => 'test@example.com',
+        ], [
+            'name' => 'Test User',
+            'password' => bcrypt('password'),
         ]);
+        $this->command->info('Usuario Test verificado/creado.');
     }
 }

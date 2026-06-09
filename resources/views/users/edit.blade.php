@@ -43,23 +43,6 @@
                             </div>
                         </div>
 
-                        <div class="mb-4">
-                            <label class="form-label fw-bold">Roles Asignados</label>
-                            <div class="row">
-                                @foreach($roles as $role)
-                                    <div class="col-md-6">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="roles[]" value="{{ $role->name }}" id="role_{{ $role->id }}"
-                                                {{ in_array($role->name, old('roles', $userRoles)) ? 'checked' : '' }}>
-                                            <label class="form-check-label text-muted" for="role_{{ $role->id }}">
-                                                {{ $role->name }}
-                                            </label>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-
                         <div class="d-flex justify-content-between mt-4">
                             <a href="{{ route('users.index') }}" class="btn btn-outline-secondary">Cancelar</a>
                             <button type="submit" class="btn fw-bold" style="background-color:#E07B15; border-color:#E07B15; color:white;">

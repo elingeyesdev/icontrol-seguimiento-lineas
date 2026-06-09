@@ -63,5 +63,7 @@ class RoleSeeder extends Seeder
             'micro.index', 'micro.create', 'micro.edit', 'micro.show',
             'ruta.index', 'ruta.create', 'ruta.edit', 'ruta.show'
         ]);
+
+        $this->command->info('Roles y permisos sincronizados correctamente.');
     }
 }

@@ -49,6 +49,7 @@
                                     @endif
                                 </td>
                                 <td>
+                                    <a href="{{ route('users.roles.edit', $user->id) }}" class="btn btn-sm btn-outline-primary">Roles</a>
                                     <a href="{{ route('users.edit', $user->id) }}" class="btn btn-sm btn-outline-warning">Editar</a>
                                     <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="d-inline"
                                         onsubmit="return confirm('¿Seguro que deseas eliminar este usuario?');">

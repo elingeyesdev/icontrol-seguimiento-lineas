@@ -31,6 +31,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('turno', TurnoController::class);
     Route::resource('roles', RolesController::class);
     Route::resource('users', App\Http\Controllers\UserController::class);
+    Route::get('users/{user}/roles', [App\Http\Controllers\UserRoleController::class, 'edit'])->name('users.roles.edit');
+    Route::put('users/{user}/roles', [App\Http\Controllers\UserRoleController::class, 'update'])->name('users.roles.update');
 });
 
 require __DIR__.'/auth.php';
