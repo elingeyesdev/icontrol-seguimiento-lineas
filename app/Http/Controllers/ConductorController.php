@@ -3,11 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Conductor;
+use App\Models\User;
+use App\Services\IntegridadAsignacionesService;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class ConductorController extends Controller
 {
-    public function __construct()
+    public function __construct(protected IntegridadAsignacionesService $integridad)
     {
         $this->middleware('permission:conductor.index')->only('index');
         $this->middleware('permission:conductor.create')->only(['create', 'store']);
@@ -22,10 +26,16 @@ class ConductorController extends Controller
     public function index(Request $request)
     {
         $buscar = $request->input('buscar');
-        $conductores = Conductor::where('nombre', 'LIKE', '%' . $buscar . '%')
-                                ->orWhere('apellido', 'LIKE', '%' . $buscar . '%')
-                                ->orWhere('correo', 'LIKE', '%' . $buscar . '%')
-                                ->paginate(10);
+        $conductores = Conductor::where('estado', '!=', 'inactivo')
+            ->when($buscar, function ($query, $buscar) {
+                return $query->where(function ($subQuery) use ($buscar) {
+                    $subQuery->where('nombre', 'LIKE', '%'.$buscar.'%')
+                        ->orWhere('apellido', 'LIKE', '%'.$buscar.'%')
+                        ->orWhere('correo', 'LIKE', '%'.$buscar.'%')
+                        ->orWhere('ci', 'LIKE', '%'.$buscar.'%');
+                });
+            })
+            ->paginate(10);
 
         return view('conductor.index', compact('conductores', 'buscar'));
     }
@@ -35,7 +45,10 @@ class ConductorController extends Controller
      */
     public function create()
     {
-        return view('conductor.create');
+        $conductor = new Conductor;
+        $usuarios = $this->usuariosDisponibles();
+
+        return view('conductor.create', compact('conductor', 'usuarios'));
     }
 
     /**
@@ -44,16 +57,14 @@ class ConductorController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nombre' => 'required|string|max:30',
-            'apellido' => 'required|string|max:30',
-            'telefono' => 'required|string|max:15',
-            'correo' => 'required|email|unique:conductor,correo|max:50',
-            'ci' => 'required|string|unique:conductor,ci|max:20',
+            'estado' => 'required|in:activo,inactivo',
+            'licencia' => ['nullable', 'string', 'max:30'],
+            'user_id' => ['required', 'integer', 'exists:users,id', Rule::unique('conductor', 'user_id')],
         ]);
 
         Conductor::create($request->all());
 
-        return redirect()->route('conductor.index')->with('info', 'Conductor creado con éxito');
+        return redirect()->route('conductor.index')->with('success', 'Conductor creado con éxito.');
     }
 
     /**
@@ -62,6 +73,7 @@ class ConductorController extends Controller
     public function show(string $id)
     {
         $conductor = Conductor::findOrFail($id);
+
         return view('conductor.show', compact('conductor'));
     }
 
@@ -71,7 +83,9 @@ class ConductorController extends Controller
     public function edit(string $id)
     {
         $conductor = Conductor::findOrFail($id);
-        return view('conductor.edit', compact('conductor'));
+        $usuarios = $this->usuariosDisponibles($conductor);
+
+        return view('conductor.edit', compact('conductor', 'usuarios'));
     }
 
     /**
@@ -82,26 +96,46 @@ class ConductorController extends Controller
         $conductor = Conductor::findOrFail($id);
 
         $request->validate([
-            'nombre' => 'required|string|max:30',
-            'apellido' => 'required|string|max:30',
-            'telefono' => 'required|string|max:15',
-            'correo' => 'required|email|unique:conductor,correo,' . $id . '|max:50',
-            'ci' => 'required|string|unique:conductor,ci,' . $id . '|max:20',
+            'estado' => 'required|in:activo,inactivo',
+            'licencia' => ['nullable', 'string', 'max:30'],
+            'user_id' => ['nullable', 'integer', 'exists:users,id', Rule::unique('conductor', 'user_id')->ignore($conductor->id)],
         ]);
+
+        $this->integridad->asegurarCambioDeEstadoPermitido($conductor, $request->all());
 
         $conductor->update($request->all());
 
-        return redirect()->route('conductor.index')->with('info', 'Conductor actualizado con éxito');
+        return redirect()->route('conductor.index')->with('success', 'Conductor actualizado con éxito.');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Logical delete: set estado to inactivo
      */
     public function destroy(string $id)
     {
         $conductor = Conductor::findOrFail($id);
-        $conductor->delete();
 
-        return redirect()->route('conductor.index')->with('info', 'Conductor eliminado con éxito');
+        try {
+            $this->integridad->desactivar($conductor);
+        } catch (ValidationException $e) {
+            return redirect()->route('conductor.index')
+                ->with('error', $e->validator->errors()->first('estado'));
+        }
+
+        return redirect()->route('conductor.index')->with('success', 'Conductor eliminado con éxito.');
+    }
+
+    private function usuariosDisponibles(?Conductor $conductor = null)
+    {
+        return User::query()
+            ->where(function ($query) use ($conductor) {
+                $query->whereDoesntHave('conductor');
+
+                if ($conductor?->user_id) {
+                    $query->orWhereKey($conductor->user_id);
+                }
+            })
+            ->orderBy('name')
+            ->get(['id', 'name', 'apellido', 'email', 'telefono', 'ci']);
     }
 }

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -13,9 +12,9 @@ class UserController extends Controller
     {
         $buscar = $request->input('buscar');
         $users = User::with('roles')
-            ->where(function($query) use ($buscar) {
-                $query->where('name', 'LIKE', '%' . $buscar . '%')
-                      ->orWhere('email', 'LIKE', '%' . $buscar . '%');
+            ->where(function ($query) use ($buscar) {
+                $query->where('name', 'LIKE', '%'.$buscar.'%')
+                    ->orWhere('email', 'LIKE', '%'.$buscar.'%');
             })
             ->paginate(10);
 
@@ -24,26 +23,30 @@ class UserController extends Controller
 
     public function create()
     {
-        $roles = Role::all();
-        return view('users.create', compact('roles'));
+        return view('users.create');
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'apellido' => 'required|string|max:50',
             'email' => 'required|email|unique:users,email',
+            'telefono' => 'nullable|string|max:20',
+            'ci' => 'required|string|max:20|unique:users,ci',
             'password' => 'required|string|min:8|confirmed',
-            'roles' => 'required|array'
         ]);
 
         $user = User::create([
             'name' => $request->name,
+            'apellido' => $request->apellido,
             'email' => $request->email,
+            'telefono' => $request->telefono,
+            'ci' => $request->ci,
             'password' => Hash::make($request->password),
         ]);
 
-        $user->syncRoles($request->roles);
+        $user->sendEmailVerificationNotification();
 
         return redirect()->route('users.index')->with('success', 'Usuario creado correctamente.');
     }
@@ -62,12 +65,18 @@ class UserController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'apellido' => 'required|string|max:50',
             'email' => 'required|email|unique:users,email,'.$user->id,
+            'telefono' => 'nullable|string|max:20',
+            'ci' => 'required|string|max:20|unique:users,ci,'.$user->id,
         ]);
 
         $data = [
             'name' => $request->name,
+            'apellido' => $request->apellido,
             'email' => $request->email,
+            'telefono' => $request->telefono,
+            'ci' => $request->ci,
         ];
 
         if ($request->filled('password')) {
@@ -83,6 +92,7 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
+
         return redirect()->route('users.index')->with('success', 'Usuario eliminado correctamente.');
     }
 }

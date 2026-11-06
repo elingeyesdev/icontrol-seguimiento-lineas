@@ -1,0 +1,46 @@
+/* ==========================================================================
+   Catálogos: estilos específicos de rutas y paradas.
+   Los estilos base viven en app.css.
+   ========================================================================== */
+
+/* Listas de paradas del formulario de rutas. */
+.ruta-paradas-list {
+    max-height: 30rem;
+    overflow-y: auto;
+}
+
+/* Tarjetas del catálogo de paradas disponibles. */
+.parada-catalogo {
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.parada-catalogo:hover {
+    border-color: var(--border-strong) !important;
+}
+
+/* Mapas Leaflet de paradas. */
+.parada-map {
+    height: 400px;
+    z-index: 1;
+}
+
+.parada-map--modal {
+    height: 450px;
+}
+
+/* Resultados de búsqueda de ubicación. */
+.parada-search-results {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+/* Marcador personalizado para el mapa de paradas. */
+.parada-marker-pin {
+    width: 30px;
+    height: 30px;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    background: var(--primary);
+    border: 3px solid #fff;
+    box-shadow: var(--shadow-sm);
+}

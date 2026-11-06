@@ -1,0 +1,193 @@
+/*
+ * Páginas de error.
+ * Autocontenido: no depende de Bootstrap ni de otros recursos del panel.
+ */
+
+:root {
+    --primary: #0b3c78;
+    --primary-dark: #072b52;
+    --accent: #7b1e2b;
+    --surface: #f4f6f9;
+    --surface-raised: #ffffff;
+    --text: #1f2937;
+    --text-muted: #5b6779;
+    --border: #dde3ec;
+    --radius: 12px;
+    --radius-lg: 16px;
+    --shadow-card: 0 12px 32px rgba(15, 23, 42, 0.08);
+    --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 2rem 1rem;
+    background-color: var(--surface);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+}
+
+.error-shell {
+    width: 100%;
+    max-width: 35rem;
+}
+
+.error-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin-bottom: 1.25rem;
+}
+
+.error-brand-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius);
+    background: var(--primary);
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.error-brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.3;
+}
+
+.error-brand-name {
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+.error-brand-tagline {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+}
+
+.error-card {
+    padding: 2rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--surface-raised);
+    box-shadow: var(--shadow-card);
+}
+
+.error-code {
+    margin: 0 0 0.5rem;
+    color: var(--accent);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.error-title {
+    margin: 0 0 0.5rem;
+    font-size: clamp(1.35rem, 2.4vw, 1.6rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.error-message {
+    margin: 0 0 1.5rem;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+.error-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+}
+
+.error-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.6rem;
+    padding: 0.55rem 1.05rem;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.error-btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(11, 60, 120, 0.18);
+}
+
+.error-btn--primary {
+    background: var(--primary);
+    color: #ffffff;
+}
+
+.error-btn--primary:hover {
+    background: var(--primary-dark);
+    color: #ffffff;
+}
+
+.error-btn--secondary {
+    border-color: var(--border);
+    background: var(--surface-raised);
+    color: var(--primary);
+}
+
+.error-btn--secondary:hover {
+    border-color: var(--primary);
+    background: #eef3fa;
+}
+
+.error-footer {
+    margin: 1.25rem 0 0;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    text-align: center;
+}
+
+@media (max-width: 480px) {
+    body {
+        align-items: flex-start;
+        padding: 1.5rem 1rem;
+    }
+
+    .error-card {
+        padding: 1.5rem 1.25rem;
+    }
+
+    .error-btn {
+        flex: 1;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+    }
+}

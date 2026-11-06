@@ -2,54 +2,36 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\TieneEstadoLogico;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * Class Micro
- *
- * @property $id
- * @property $dueño_id
- * @property $placa
- * @property $modelo
- * @property $marca
- * @property $capacidad_pasajeros
- * @property $created_at
- * @property $updated_at
- *
- * @property Dueño $dueño
- * @property Interno $interno
- * @package App
- * @mixin \Illuminate\Database\Eloquent\Builder
- */
 class Micro extends Model
 {
-    
+    use TieneEstadoLogico;
+
     protected $perPage = 20;
 
     protected $table = 'micro';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = ['dueño_id', 'placa', 'modelo', 'marca', 'capacidad_pasajeros'];
+    protected $fillable = [
+        'propietario_id',
+        'interno_id',
+        'placa',
+        'chasis',
+        'anio_fabricacion',
+        'modelo',
+        'marca',
+        'capacidad_pasajeros',
+        'estado',
+    ];
 
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function dueño()
+    public function propietario()
     {
-        return $this->belongsTo(\App\Models\Dueño::class, 'dueño_id', 'id');
+        return $this->belongsTo(Propietario::class, 'propietario_id', 'id');
     }
-    
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
+
     public function interno()
     {
-        return $this->hasOne(\App\Models\Interno::class, 'micro_id', 'id');
+        return $this->belongsTo(Interno::class, 'interno_id', 'id');
     }
-    
 }

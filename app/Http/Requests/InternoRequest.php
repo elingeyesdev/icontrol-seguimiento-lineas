@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class InternoRequest extends FormRequest
 {
@@ -17,15 +19,31 @@ class InternoRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
+        $id = $this->route('interno');
+
         return [
-			'estado' => 'required|string',
-			'micro_id' => 'required',
-			'conductor_id' => 'required',
-			'fecha_ingreso' => 'required',
+            'numero_interno' => [
+                'required',
+                'string',
+                'max:10',
+                Rule::unique('interno', 'numero_interno')->ignore($id),
+            ],
+            'fecha_ingreso' => 'required|date',
+            'observaciones' => 'nullable|string',
+            'estado' => 'required|in:disponible,asignado,inactivo',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'numero_interno.unique' => 'Este número de interno ya se encuentra registrado.',
+            'numero_interno.required' => 'El número de interno es obligatorio.',
+            'fecha_ingreso.required' => 'La fecha de ingreso es obligatoria.',
         ];
     }
 }

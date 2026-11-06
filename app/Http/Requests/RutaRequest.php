@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class RutaRequest extends FormRequest
@@ -17,14 +18,14 @@ class RutaRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
-			'origen' => 'required|string',
-			'destino' => 'required|string',
-			'nombre_ruta' => 'required|string',
+            'nombre' => 'required|string|max:50',
+            'descripcion' => 'nullable|string',
+            'estado' => 'required|in:activo,inactivo',
         ];
     }
 }

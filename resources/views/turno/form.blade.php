@@ -1,43 +1,82 @@
-<div class="row padding-1 p-1">
-    <div class="col-md-12">
-        <div class="form-group mb-3">
-            <label for="interno_id" class="form-label fw-bold">{{ __('Interno ID') }}</label>
-            <input type="text" name="interno_id" class="form-control @error('interno_id') is-invalid @enderror" value="{{ old('interno_id', $turno?->interno_id) }}" id="interno_id" placeholder="ID del Interno">
-            @error('interno_id')
-                <div class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></div>
+<div class="form-section">
+    <div class="form-section-title">Horario</div>
+    <div class="row g-3">
+        <div class="col-12">
+            <label for="nombre" class="form-label">Turno <span class="form-hint-required">*</span></label>
+            <select name="nombre" id="nombre"
+                    class="form-select @error('nombre') is-invalid @enderror">
+                <option value="">— Seleccionar turno —</option>
+                <option value="mañana" {{ old('nombre', $turno->nombre ?? '') === 'mañana' ? 'selected' : '' }}>
+                    Mañana
+                </option>
+                <option value="tarde" {{ old('nombre', $turno->nombre ?? '') === 'tarde' ? 'selected' : '' }}>
+                    Tarde
+                </option>
+                <option value="noche" {{ old('nombre', $turno->nombre ?? '') === 'noche' ? 'selected' : '' }}>
+                    Noche
+                </option>
+            </select>
+            @error('nombre')
+                <div class="text-danger small mt-1">{{ $message }}</div>
             @enderror
         </div>
-        <div class="form-group mb-3">
-            <label for="ruta_id" class="form-label fw-bold">{{ __('Ruta ID') }}</label>
-            <input type="text" name="ruta_id" class="form-control @error('ruta_id') is-invalid @enderror" value="{{ old('ruta_id', $turno?->ruta_id) }}" id="ruta_id" placeholder="ID de la Ruta">
-            @error('ruta_id')
-                <div class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></div>
-            @enderror
-        </div>
-        <div class="form-group mb-3">
-            <label for="hora_inicio" class="form-label fw-bold">{{ __('Hora Inicio') }}</label>
-            <input type="time" name="hora_inicio" class="form-control @error('hora_inicio') is-invalid @enderror" value="{{ old('hora_inicio', $turno?->hora_inicio) }}" id="hora_inicio">
+
+        <div class="col-12 col-md-6">
+            <label for="hora_inicio" class="form-label">Hora de inicio <span class="form-hint-required">*</span></label>
+            <input type="time" name="hora_inicio" id="hora_inicio"
+                   class="form-control @error('hora_inicio') is-invalid @enderror"
+                   value="{{ old('hora_inicio', isset($turno->hora_inicio) ? \Carbon\Carbon::parse($turno->hora_inicio)->format('H:i') : '') }}">
             @error('hora_inicio')
-                <div class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></div>
+                <div class="text-danger small mt-1">{{ $message }}</div>
             @enderror
         </div>
-        <div class="form-group mb-3">
-            <label for="hora_fin" class="form-label fw-bold">{{ __('Hora Fin') }}</label>
-            <input type="time" name="hora_fin" class="form-control @error('hora_fin') is-invalid @enderror" value="{{ old('hora_fin', $turno?->hora_fin) }}" id="hora_fin">
+
+        <div class="col-12 col-md-6">
+            <label for="hora_fin" class="form-label">Hora de fin <span class="form-hint-required">*</span></label>
+            <input type="time" name="hora_fin" id="hora_fin"
+                   class="form-control @error('hora_fin') is-invalid @enderror"
+                   value="{{ old('hora_fin', isset($turno->hora_fin) ? \Carbon\Carbon::parse($turno->hora_fin)->format('H:i') : '') }}">
             @error('hora_fin')
-                <div class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></div>
-            @enderror
-        </div>
-        <div class="form-group mb-3">
-            <label for="fecha_laboral" class="form-label fw-bold">{{ __('Fecha Laboral') }}</label>
-            <input type="date" name="fecha_laboral" class="form-control @error('fecha_laboral') is-invalid @enderror" value="{{ old('fecha_laboral', $turno?->fecha_laboral) }}" id="fecha_laboral">
-            @error('fecha_laboral')
-                <div class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></div>
+                <div class="text-danger small mt-1">{{ $message }}</div>
             @enderror
         </div>
     </div>
-    <div class="col-md-12 mt-4 d-flex justify-content-between">
-        <a href="{{ route('turno.index') }}" class="btn btn-outline-secondary">Cancelar</a>
-        <button type="submit" class="btn fw-bold" style="background-color:#E07B15; border-color:#E07B15; color:white;">{{ __('Guardar') }}</button>
+</div>
+
+<div class="form-section">
+    <div class="form-section-title">Detalles y estado</div>
+    <div class="row g-3">
+        <div class="col-12">
+            <label for="descripcion" class="form-label">Descripción <span class="text-muted fw-normal">(opcional)</span></label>
+            <input type="text" name="descripcion" id="descripcion"
+                   class="form-control @error('descripcion') is-invalid @enderror"
+                   value="{{ old('descripcion', $turno->descripcion ?? '') }}"
+                   placeholder="Ej. Turno de mañana, inicia a las 5am"
+                   maxlength="255">
+            @error('descripcion')
+                <div class="text-danger small mt-1">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <div class="col-12 col-md-6">
+            <label for="estado" class="form-label">Estado <span class="form-hint-required">*</span></label>
+            <select name="estado" id="estado"
+                    class="form-select @error('estado') is-invalid @enderror">
+                <option value="activo"   {{ old('estado', $turno->estado ?? 'activo') === 'activo'   ? 'selected' : '' }}>Activo</option>
+                <option value="inactivo" {{ old('estado', $turno->estado ?? 'activo') === 'inactivo' ? 'selected' : '' }}>Inactivo</option>
+            </select>
+            @error('estado')
+                <div class="text-danger small mt-1">{{ $message }}</div>
+            @enderror
+        </div>
     </div>
+</div>
+
+<div class="d-flex flex-wrap justify-content-between gap-2 mt-3">
+    <a href="{{ route('turno.index') }}" class="btn btn-outline-brand">
+        <i class="bi bi-arrow-left me-1" aria-hidden="true"></i>Cancelar
+    </a>
+    <button type="submit" class="btn btn-brand">
+        <i class="bi bi-check-lg me-1" aria-hidden="true"></i>Guardar
+    </button>
 </div>

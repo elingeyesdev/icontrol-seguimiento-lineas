@@ -1,5 +1,5 @@
-@extends('errors::minimal')
+@extends('errors.layout')
 
-@section('title', __('Payment Required'))
+@section('title', 'Pago requerido')
 @section('code', '402')
-@section('message', __('Payment Required'))
+@section('message', 'El acceso a este recurso requiere una suscripción activa.')

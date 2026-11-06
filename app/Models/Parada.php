@@ -2,40 +2,28 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\TieneEstadoLogico;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * Class Parada
- *
- * @property $id
- * @property $nombre
- * @property $ubicacion
- * @property $created_at
- * @property $updated_at
- *
- * @property Ruta[] $rutas
- * @package App
- * @mixin \Illuminate\Database\Eloquent\Builder
- */
 class Parada extends Model
 {
-    
-    protected $perPage = 20;
+    use HasFactory, TieneEstadoLogico;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = ['nombre', 'ubicacion'];
+    protected $table = 'paradas';
 
+    protected $fillable = [
+        'nombre',
+        'referencia',
+        'latitud',
+        'longitud',
+        'estado',
+    ];
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
     public function rutas()
     {
-        return $this->belongsToMany(\App\Models\Ruta::class, 'parada_ruta', 'parada_id', 'ruta_id');
+        return $this->belongsToMany(Ruta::class, 'parada_ruta', 'parada_id', 'ruta_id')
+            ->withPivot(['orden', 'sentido', 'estado'])
+            ->withTimestamps();
     }
-    
 }

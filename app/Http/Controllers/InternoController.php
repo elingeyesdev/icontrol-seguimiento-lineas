@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\InternoRequest;
 use App\Models\Interno;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use App\Http\Requests\InternoRequest;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
@@ -17,8 +17,14 @@ class InternoController extends Controller
     public function index(Request $request): View
     {
         $buscar = $request->input('buscar');
-        $internos = Interno::where('estado', 'LIKE', '%' . $buscar . '%')
-                           ->paginate(10);
+        $internos = Interno::where('estado', '!=', 'inactivo')
+            ->when($buscar, function ($query, $buscar) {
+                return $query->where(function ($subQuery) use ($buscar) {
+                    $subQuery->where('numero_interno', 'LIKE', '%'.$buscar.'%')
+                        ->orWhere('estado', 'LIKE', '%'.$buscar.'%');
+                });
+            })
+            ->paginate(10);
 
         return view('interno.index', compact('internos', 'buscar'));
     }
@@ -28,7 +34,7 @@ class InternoController extends Controller
      */
     public function create(): View
     {
-        $interno = new Interno();
+        $interno = new Interno;
 
         return view('interno.create', compact('interno'));
     }
@@ -41,7 +47,7 @@ class InternoController extends Controller
         Interno::create($request->validated());
 
         return Redirect::route('interno.index')
-            ->with('success', 'Interno created successfully.');
+            ->with('success', 'Interno creado correctamente.');
     }
 
     /**
@@ -49,7 +55,7 @@ class InternoController extends Controller
      */
     public function show($id): View
     {
-        $interno = Interno::find($id);
+        $interno = Interno::findOrFail($id);
 
         return view('interno.show', compact('interno'));
     }
@@ -59,7 +65,7 @@ class InternoController extends Controller
      */
     public function edit($id): View
     {
-        $interno = Interno::find($id);
+        $interno = Interno::findOrFail($id);
 
         return view('interno.edit', compact('interno'));
     }
@@ -67,19 +73,24 @@ class InternoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(InternoRequest $request, Interno $interno): RedirectResponse
+    public function update(InternoRequest $request, $id): RedirectResponse
     {
+        $interno = Interno::findOrFail($id);
         $interno->update($request->validated());
 
         return Redirect::route('interno.index')
-            ->with('success', 'Interno updated successfully');
+            ->with('success', 'Interno actualizado correctamente.');
     }
 
+    /**
+     * Logical delete: set estado to inactivo
+     */
     public function destroy($id): RedirectResponse
     {
-        Interno::find($id)->delete();
+        $interno = Interno::findOrFail($id);
+        $interno->update(['estado' => 'inactivo']);
 
         return Redirect::route('interno.index')
-            ->with('success', 'Interno deleted successfully');
+            ->with('success', 'Interno desactivado correctamente.');
     }
 }

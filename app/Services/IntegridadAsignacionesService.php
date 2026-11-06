@@ -94,7 +94,10 @@ class IntegridadAsignacionesService
         $this->asegurarDesactivacionPermitida($entidad);
     }
 
-  
+    /**
+     * Desactiva lógicamente la entidad dentro de una transacción, bloqueando
+     * su fila para que no se cree una asignación operativa en paralelo.
+     */
     public function desactivar(Model $entidad): Model
     {
         return DB::transaction(function () use ($entidad) {

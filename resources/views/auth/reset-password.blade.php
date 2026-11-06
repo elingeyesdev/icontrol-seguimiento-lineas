@@ -1,47 +1,67 @@
-<x-guest-layout>
-    <form method="POST" action="{{ route('password.store') }}">
-        @csrf
+<x-guest-layout title="Restablecer contraseña">
+    <div class="auth-single">
+        <div class="auth-card">
+            <div class="auth-card-brand">
+                <x-auth-brand compact />
+            </div>
 
-        <!-- Password Reset Token -->
-        <input type="hidden" name="token" value="{{ $request->route('token') }}">
+            <x-auth-heading
+                align="center"
+                icon="bi-shield-lock"
+                eyebrow="Nueva clave"
+                title="Restablecer contraseña"
+                description="Escribe tu nueva contraseña de acceso."
+            />
 
-        <!-- Email Address -->
-        <div class="mb-3">
-            <label for="email" class="form-label">Correo Electrónico</label>
-            <input id="email" class="form-control @error('email') is-invalid @enderror" type="email" name="email" value="{{ old('email', $request->email) }}" required autofocus autocomplete="username">
-            @error('email')
-                <div class="invalid-feedback">
-                    {{ $message }}
-                </div>
-            @enderror
+            <form method="POST" action="{{ route('password.store') }}">
+                @csrf
+
+                <input type="hidden" name="token" value="{{ $request->route('token') }}">
+
+                <x-auth-field
+                    name="email"
+                    label="Correo electrónico"
+                    type="email"
+                    icon="bi-envelope"
+                    :value="$request->email"
+                    autocomplete="username"
+                    :required="true"
+                    :autofocus="true"
+                />
+
+                <x-auth-field
+                    name="password"
+                    label="Nueva contraseña"
+                    type="password"
+                    icon="bi-lock"
+                    placeholder="Mínimo 8 caracteres"
+                    autocomplete="new-password"
+                    hint="Usa al menos 8 caracteres."
+                    :required="true"
+                />
+
+                <x-auth-field
+                    name="password_confirmation"
+                    label="Confirmar contraseña"
+                    type="password"
+                    icon="bi-shield-lock"
+                    placeholder="Repite la contraseña"
+                    autocomplete="new-password"
+                    :required="true"
+                />
+
+                <button type="submit" class="auth-btn auth-btn--primary auth-btn--block auth-submit">
+                    Guardar contraseña
+                    <i class="bi bi-check-circle" aria-hidden="true"></i>
+                </button>
+
+                <div class="auth-divider"><span>o</span></div>
+
+                <a href="{{ route('login') }}" class="auth-btn auth-btn--secondary auth-btn--block">
+                    <i class="bi bi-arrow-left" aria-hidden="true"></i>
+                    Volver a iniciar sesión
+                </a>
+            </form>
         </div>
-
-        <!-- Password -->
-        <div class="mb-3">
-            <label for="password" class="form-label">Nueva Contraseña</label>
-            <input id="password" class="form-control @error('password') is-invalid @enderror" type="password" name="password" required autocomplete="new-password">
-            @error('password')
-                <div class="invalid-feedback">
-                    {{ $message }}
-                </div>
-            @enderror
-        </div>
-
-        <!-- Confirm Password -->
-        <div class="mb-3">
-            <label for="password_confirmation" class="form-label">Confirmar Contraseña</label>
-            <input id="password_confirmation" class="form-control @error('password_confirmation') is-invalid @enderror" type="password" name="password_confirmation" required autocomplete="new-password">
-            @error('password_confirmation')
-                <div class="invalid-feedback">
-                    {{ $message }}
-                </div>
-            @enderror
-        </div>
-
-        <div class="d-grid gap-2">
-            <button type="submit" class="btn btn-primary">
-                Restablecer Contraseña
-            </button>
-        </div>
-    </form>
+    </div>
 </x-guest-layout>

@@ -1,29 +1,33 @@
 @extends('layouts.app')
 
-@section('template_title')
-    {{ __('Update') }} Parada
-@endsection
-
 @section('content')
-    <section class="content container-fluid">
-        <div class="">
-            <div class="col-md-12">
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-10">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ route('parada.index') }}" class="text-decoration-none">Paradas</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Editar: {{ $parada->nombre }}</li>
+                </ol>
+            </nav>
 
-                <div class="card card-default">
-                    <div class="card-header">
-                        <span class="card-title">{{ __('Update') }} Parada</span>
-                    </div>
-                    <div class="card-body bg-white">
-                        <form method="POST" action="{{ route('paradas.update', $parada->id) }}"  role="form" enctype="multipart/form-data">
-                            {{ method_field('PATCH') }}
-                            @csrf
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title"><i class="bi bi-geo-alt" aria-hidden="true"></i>Editar Parada</h1>
+                    <p class="page-subtitle">Actualice la información de la parada.</p>
+                </div>
+            </div>
 
-                            @include('parada.form')
-
-                        </form>
-                    </div>
+            <div class="card">
+                <div class="card-body">
+                    <form action="{{ route('parada.update', $parada->id) }}" method="POST">
+                        @csrf
+                        @method('PUT')
+                        @include('parada.form')
+                    </form>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</div>
 @endsection

@@ -10,15 +10,17 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
+        "barryvdh/laravel-dompdf": "^3.1",
+        "darkaonline/l5-swagger": "^11.1",
         "laravel/framework": "^13.0",
-        "laravel/sanctum": "^4.0",
+        "laravel/sanctum": "^4.3",
         "laravel/tinker": "^3.0",
         "spatie/laravel-permission": "^7.2"
     },
     "require-dev": {
-        "andyabih/laravel-to-uml": "^1.0",
         "fakerphp/faker": "^1.23",
         "ibex/crud-generator": "^2.1",
+        "laravel/boost": "^2.8",
         "laravel/breeze": "^2.4",
         "laravel/pail": "^1.2.5",
         "laravel/pint": "^1.27",

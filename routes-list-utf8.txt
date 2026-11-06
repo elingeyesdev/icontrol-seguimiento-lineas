@@ -1,0 +1,96 @@
+﻿
+  GET|HEAD        / ................................................................................ routes/web.php:14
+  POST            api/login ................................................................. Api\AuthController@login
+  POST            api/logout ............................................................... Api\AuthController@logout
+  GET|HEAD        api/me ....................................................................... Api\AuthController@me
+  POST            api/refresh ............................................................. Api\AuthController@refresh
+  GET|HEAD        conductor .............................................. conductor.index ÔÇ║ ConductorController@index
+  POST            conductor .............................................. conductor.store ÔÇ║ ConductorController@store
+  GET|HEAD        conductor/create ..................................... conductor.create ÔÇ║ ConductorController@create
+  GET|HEAD        conductor/{conductor} .................................... conductor.show ÔÇ║ ConductorController@show
+  PUT|PATCH       conductor/{conductor} ................................ conductor.update ÔÇ║ ConductorController@update
+  DELETE          conductor/{conductor} .............................. conductor.destroy ÔÇ║ ConductorController@destroy
+  GET|HEAD        conductor/{conductor}/edit ............................... conductor.edit ÔÇ║ ConductorController@edit
+  GET|HEAD        confirm-password ........................ password.confirm ÔÇ║ Auth\ConfirmablePasswordController@show
+  POST            confirm-password .......................................... Auth\ConfirmablePasswordController@store
+  GET|HEAD        dashboard ............................................................ dashboard ÔÇ║ routes/web.php:18
+  GET|HEAD        due├▒o .......................................................... due├▒o.index ÔÇ║ Due├▒oController@index
+  POST            due├▒o .......................................................... due├▒o.store ÔÇ║ Due├▒oController@store
+  GET|HEAD        due├▒o/create ................................................. due├▒o.create ÔÇ║ Due├▒oController@create
+  GET|HEAD        due├▒o/{due├▒o} .................................................... due├▒o.show ÔÇ║ Due├▒oController@show
+  PUT|PATCH       due├▒o/{due├▒o} ................................................ due├▒o.update ÔÇ║ Due├▒oController@update
+  DELETE          due├▒o/{due├▒o} .............................................. due├▒o.destroy ÔÇ║ Due├▒oController@destroy
+  GET|HEAD        due├▒o/{due├▒o}/edit ............................................... due├▒o.edit ÔÇ║ Due├▒oController@edit
+  POST            email/verification-notification verification.send ÔÇ║ Auth\EmailVerificationNotificationController@stÔÇª
+  GET|HEAD        forgot-password ......................... password.request ÔÇ║ Auth\PasswordResetLinkController@create
+  POST            forgot-password ............................ password.email ÔÇ║ Auth\PasswordResetLinkController@store
+  GET|HEAD        interno .................................................... interno.index ÔÇ║ InternoController@index
+  POST            interno .................................................... interno.store ÔÇ║ InternoController@store
+  GET|HEAD        interno/create ........................................... interno.create ÔÇ║ InternoController@create
+  GET|HEAD        interno/{interno} ............................................ interno.show ÔÇ║ InternoController@show
+  PUT|PATCH       interno/{interno} ........................................ interno.update ÔÇ║ InternoController@update
+  DELETE          interno/{interno} ...................................... interno.destroy ÔÇ║ InternoController@destroy
+  GET|HEAD        interno/{interno}/edit ....................................... interno.edit ÔÇ║ InternoController@edit
+  GET|HEAD        login ........................................... login ÔÇ║ Auth\AuthenticatedSessionController@create
+  POST            login .................................................... Auth\AuthenticatedSessionController@store
+  POST            logout ........................................ logout ÔÇ║ Auth\AuthenticatedSessionController@destroy
+  GET|HEAD        micro .......................................................... micro.index ÔÇ║ MicroController@index
+  POST            micro .......................................................... micro.store ÔÇ║ MicroController@store
+  GET|HEAD        micro/create ................................................. micro.create ÔÇ║ MicroController@create
+  GET|HEAD        micro/{micro} .................................................... micro.show ÔÇ║ MicroController@show
+  PUT|PATCH       micro/{micro} ................................................ micro.update ÔÇ║ MicroController@update
+  DELETE          micro/{micro} .............................................. micro.destroy ÔÇ║ MicroController@destroy
+  GET|HEAD        micro/{micro}/edit ............................................... micro.edit ÔÇ║ MicroController@edit
+  GET|HEAD        parada ....................................................... parada.index ÔÇ║ ParadaController@index
+  POST            parada ....................................................... parada.store ÔÇ║ ParadaController@store
+  GET|HEAD        parada/create .............................................. parada.create ÔÇ║ ParadaController@create
+  GET|HEAD        parada/{parada} ................................................ parada.show ÔÇ║ ParadaController@show
+  PUT|PATCH       parada/{parada} ............................................ parada.update ÔÇ║ ParadaController@update
+  DELETE          parada/{parada} .......................................... parada.destroy ÔÇ║ ParadaController@destroy
+  GET|HEAD        parada/{parada}/edit ........................................... parada.edit ÔÇ║ ParadaController@edit
+  PUT             password .......................................... password.update ÔÇ║ Auth\PasswordController@update
+  GET|HEAD        profile ...................................................... profile.edit ÔÇ║ ProfileController@edit
+  PATCH           profile .................................................. profile.update ÔÇ║ ProfileController@update
+  DELETE          profile ................................................ profile.destroy ÔÇ║ ProfileController@destroy
+  GET|HEAD        register ........................................... register ÔÇ║ Auth\RegisteredUserController@create
+  POST            register ....................................................... Auth\RegisteredUserController@store
+  POST            reset-password ................................... password.store ÔÇ║ Auth\NewPasswordController@store
+  GET|HEAD        reset-password/{token} .......................... password.reset ÔÇ║ Auth\NewPasswordController@create
+  GET|HEAD        roles .......................................................... roles.index ÔÇ║ RolesController@index
+  POST            roles .......................................................... roles.store ÔÇ║ RolesController@store
+  GET|HEAD        roles/asignar ........................................... roles.assign ÔÇ║ RolesController@assignUsers
+  POST            roles/asignar .................................. roles.assign.store ÔÇ║ RolesController@storeUserRoles
+  GET|HEAD        roles/create ................................................. roles.create ÔÇ║ RolesController@create
+  GET|HEAD        roles/{role} ..................................................... roles.show ÔÇ║ RolesController@show
+  PUT|PATCH       roles/{role} ................................................. roles.update ÔÇ║ RolesController@update
+  DELETE          roles/{role} ............................................... roles.destroy ÔÇ║ RolesController@destroy
+  GET|HEAD        roles/{role}/edit ................................................ roles.edit ÔÇ║ RolesController@edit
+  GET|HEAD        ruta ............................................................. ruta.index ÔÇ║ RutaController@index
+  POST            ruta ............................................................. ruta.store ÔÇ║ RutaController@store
+  GET|HEAD        ruta/create .................................................... ruta.create ÔÇ║ RutaController@create
+  GET|HEAD        ruta/{rutum} ....................................................... ruta.show ÔÇ║ RutaController@show
+  PUT|PATCH       ruta/{rutum} ................................................... ruta.update ÔÇ║ RutaController@update
+  DELETE          ruta/{rutum} ................................................. ruta.destroy ÔÇ║ RutaController@destroy
+  GET|HEAD        ruta/{rutum}/edit .................................................. ruta.edit ÔÇ║ RutaController@edit
+  GET|HEAD        storage/{path} storage.local ÔÇ║ vendor/laravel/framework/src/Illuminate/Filesystem/FilesystemServiceÔÇª
+  PUT             storage/{path} storage.local.upload ÔÇ║ vendor/laravel/framework/src/Illuminate/Filesystem/FilesystemÔÇª
+  GET|HEAD        turno .......................................................... turno.index ÔÇ║ TurnoController@index
+  POST            turno .......................................................... turno.store ÔÇ║ TurnoController@store
+  GET|HEAD        turno/create ................................................. turno.create ÔÇ║ TurnoController@create
+  GET|HEAD        turno/{turno} .................................................... turno.show ÔÇ║ TurnoController@show
+  PUT|PATCH       turno/{turno} ................................................ turno.update ÔÇ║ TurnoController@update
+  DELETE          turno/{turno} .............................................. turno.destroy ÔÇ║ TurnoController@destroy
+  GET|HEAD        turno/{turno}/edit ............................................... turno.edit ÔÇ║ TurnoController@edit
+  GET|HEAD        up ..... vendor/laravel/framework/src/Illuminate/Foundation/Configuration/ApplicationBuilder.php:221
+  GET|HEAD        users ........................................................... users.index ÔÇ║ UserController@index
+  POST            users ........................................................... users.store ÔÇ║ UserController@store
+  GET|HEAD        users/create .................................................. users.create ÔÇ║ UserController@create
+  GET|HEAD        users/{user} ...................................................... users.show ÔÇ║ UserController@show
+  PUT|PATCH       users/{user} .................................................. users.update ÔÇ║ UserController@update
+  DELETE          users/{user} ................................................ users.destroy ÔÇ║ UserController@destroy
+  GET|HEAD        users/{user}/edit ................................................. users.edit ÔÇ║ UserController@edit
+  GET|HEAD        verify-email .......................... verification.notice ÔÇ║ Auth\EmailVerificationPromptController
+  GET|HEAD        verify-email/{id}/{hash} .......................... verification.verify ÔÇ║ Auth\VerifyEmailController
+
+                                                                                                   Showing [92] routes
+

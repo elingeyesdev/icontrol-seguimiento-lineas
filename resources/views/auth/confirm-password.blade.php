@@ -1,26 +1,36 @@
-<x-guest-layout>
-    <div class="mb-4 small text-muted">
-        Esta es un área segura de la aplicación. Por favor, confirma tu contraseña antes de continuar.
+<x-guest-layout title="Confirmar contraseña">
+    <div class="auth-single">
+        <div class="auth-card">
+            <div class="auth-card-brand">
+                <x-auth-brand compact />
+            </div>
+
+            <x-auth-heading
+                align="center"
+                icon="bi-shield-lock"
+                eyebrow="Confirmación"
+                title="Área protegida"
+                description="Por seguridad, confirma tu contraseña antes de continuar."
+            />
+
+            <form method="POST" action="{{ route('password.confirm') }}">
+                @csrf
+
+                <x-auth-field
+                    name="password"
+                    label="Contraseña"
+                    type="password"
+                    icon="bi-lock"
+                    placeholder="••••••••"
+                    autocomplete="current-password"
+                    :required="true"
+                />
+
+                <button type="submit" class="auth-btn auth-btn--primary auth-btn--block auth-submit">
+                    Confirmar
+                    <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                </button>
+            </form>
+        </div>
     </div>
-
-    <form method="POST" action="{{ route('password.confirm') }}">
-        @csrf
-
-        <!-- Password -->
-        <div class="mb-3">
-            <label for="password" class="form-label">Contraseña</label>
-            <input id="password" class="form-control @error('password') is-invalid @enderror" type="password" name="password" required autocomplete="current-password">
-            @error('password')
-                <div class="invalid-feedback">
-                    {{ $message }}
-                </div>
-            @enderror
-        </div>
-
-        <div class="d-grid gap-2">
-            <button type="submit" class="btn btn-primary">
-                Confirmar
-            </button>
-        </div>
-    </form>
 </x-guest-layout>

@@ -1,62 +1,94 @@
-<x-guest-layout>
-    <!-- Session Status -->
-    @if (session('status'))
-        <div class="alert alert-success mb-3" role="alert">
-            {{ session('status') }}
-        </div>
-    @endif
+<x-guest-layout title="Iniciar sesión">
+    <div class="auth-shell">
+        <section class="auth-hero auth-hero--login" aria-label="Información del sistema">
+            <div class="auth-hero-overlay" aria-hidden="true"></div>
 
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
+            <div class="auth-hero-content">
+                <x-auth-brand />
 
-        <!-- Email Address -->
-        <div class="mb-3">
-            <label for="email" class="form-label">Correo Electrónico</label>
-            <input id="email" class="form-control @error('email') is-invalid @enderror" type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="username">
-            @error('email')
-                <div class="invalid-feedback">
-                    {{ $message }}
+                <div class="auth-hero-footer">
+                    <span class="auth-hero-note">
+                        <i class="bi bi-broadcast" aria-hidden="true"></i>
+                        Monitoreo satelital en tiempo real
+                    </span>
+
+                    <div class="auth-hero-meta">
+                        <span>Santa Cruz · Bolivia</span>
+                        <span>
+                            <i class="bi bi-shield-check" aria-hidden="true"></i>
+                            Acceso seguro
+                        </span>
+                    </div>
                 </div>
-            @enderror
-        </div>
-
-        <!-- Password -->
-        <div class="mb-3">
-            <label for="password" class="form-label">Contraseña</label>
-            <input id="password" class="form-control @error('password') is-invalid @enderror" type="password" name="password" required autocomplete="current-password">
-            @error('password')
-                <div class="invalid-feedback">
-                    {{ $message }}
-                </div>
-            @enderror
-        </div>
-
-        <!-- Remember Me -->
-        <div class="mb-3 form-check">
-            <input id="remember_me" type="checkbox" class="form-check-input" name="remember">
-            <label class="form-check-label" for="remember_me">Recordarme</label>
-        </div>
-
-        <div class="d-grid gap-2 mb-3">
-            <button type="submit" class="btn btn-primary">
-                Iniciar Sesión
-            </button>
-        </div>
-
-        <div class="text-center">
-            @if (Route::has('password.request'))
-                <a class="text-decoration-none small" href="{{ route('password.request') }}">
-                    ¿Olvidaste tu contraseña?
-                </a>
-            @endif
-        </div>
-        
-        @if (Route::has('register'))
-            <div class="text-center mt-2">
-                <a class="text-decoration-none small text-muted" href="{{ route('register') }}">
-                    ¿No tienes cuenta? Regístrate aquí
-                </a>
             </div>
-        @endif
-    </form>
+        </section>
+
+        <section class="auth-panel">
+            <div class="auth-panel-inner">
+                <x-auth-brand compact class="auth-panel-brand" />
+
+                <x-auth-heading
+                    eyebrow="Línea 61 · Control operativo"
+                    title="Iniciar sesión"
+                    description="Ingresa para administrar la operación diaria de la línea."
+                />
+
+                @if (session('status'))
+                    <x-auth-status type="success">{{ session('status') }}</x-auth-status>
+                @endif
+
+                <form method="POST" action="{{ route('login') }}">
+                    @csrf
+
+                    <x-auth-field
+                        name="email"
+                        label="Correo electrónico"
+                        type="email"
+                        icon="bi-envelope"
+                        placeholder="usuario@correo.com"
+                        autocomplete="username"
+                        :required="true"
+                        :autofocus="true"
+                    />
+
+                    <x-auth-field
+                        name="password"
+                        label="Contraseña"
+                        type="password"
+                        icon="bi-lock"
+                        placeholder="••••••••"
+                        autocomplete="current-password"
+                        :required="true"
+                    />
+
+                    <div class="auth-row">
+                        <div class="auth-check">
+                            <input id="remember_me" type="checkbox" name="remember">
+                            <label for="remember_me">Recordarme</label>
+                        </div>
+
+                        @if (Route::has('password.request'))
+                            <a class="auth-link" href="{{ route('password.request') }}">
+                                ¿Olvidaste tu contraseña?
+                            </a>
+                        @endif
+                    </div>
+
+                    <button type="submit" class="auth-btn auth-btn--primary auth-btn--block">
+                        Ingresar
+                        <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                    </button>
+
+                    @if (Route::has('register'))
+                        <div class="auth-divider"><span>o</span></div>
+
+                        <a href="{{ route('register') }}" class="auth-btn auth-btn--secondary auth-btn--block">
+                            <i class="bi bi-person-plus" aria-hidden="true"></i>
+                            Crear cuenta
+                        </a>
+                    @endif
+                </form>
+            </div>
+        </section>
+    </div>
 </x-guest-layout>

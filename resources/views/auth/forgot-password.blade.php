@@ -1,39 +1,48 @@
-<x-guest-layout>
-    <div class="mb-4 small text-muted">
-        ¿Olvidaste tu contraseña? No hay problema. Simplemente déjanos saber tu dirección de correo electrónico y te enviaremos un enlace de restablecimiento de contraseña que te permitirá elegir una nueva.
+<x-guest-layout title="Recuperar contraseña">
+    <div class="auth-single">
+        <div class="auth-card">
+            <div class="auth-card-brand">
+                <x-auth-brand compact />
+            </div>
+
+            <x-auth-heading
+                align="center"
+                icon="bi-key"
+                eyebrow="Recuperación"
+                title="Recuperar contraseña"
+                description="Ingresa tu correo y te enviaremos el enlace para restablecerla."
+            />
+
+            @if (session('status'))
+                <x-auth-status type="success">{{ session('status') }}</x-auth-status>
+            @endif
+
+            <form method="POST" action="{{ route('password.email') }}">
+                @csrf
+
+                <x-auth-field
+                    name="email"
+                    label="Correo electrónico"
+                    type="email"
+                    icon="bi-envelope"
+                    placeholder="tu@correo.com"
+                    autocomplete="username"
+                    :required="true"
+                    :autofocus="true"
+                />
+
+                <button type="submit" class="auth-btn auth-btn--primary auth-btn--block auth-submit">
+                    Enviar enlace
+                    <i class="bi bi-send" aria-hidden="true"></i>
+                </button>
+
+                <div class="auth-divider"><span>o</span></div>
+
+                <a href="{{ route('login') }}" class="auth-btn auth-btn--secondary auth-btn--block">
+                    <i class="bi bi-arrow-left" aria-hidden="true"></i>
+                    Volver a iniciar sesión
+                </a>
+            </form>
+        </div>
     </div>
-
-    <!-- Session Status -->
-    @if (session('status'))
-        <div class="alert alert-success mb-3" role="alert">
-            {{ session('status') }}
-        </div>
-    @endif
-
-    <form method="POST" action="{{ route('password.email') }}">
-        @csrf
-
-        <!-- Email Address -->
-        <div class="mb-3">
-            <label for="email" class="form-label">Correo Electrónico</label>
-            <input id="email" class="form-control @error('email') is-invalid @enderror" type="email" name="email" value="{{ old('email') }}" required autofocus>
-            @error('email')
-                <div class="invalid-feedback">
-                    {{ $message }}
-                </div>
-            @enderror
-        </div>
-
-        <div class="d-grid gap-2">
-            <button type="submit" class="btn btn-primary">
-                Enviar enlace al correo
-            </button>
-        </div>
-        
-        <div class="text-center mt-3">
-            <a class="text-decoration-none small text-muted" href="{{ route('login') }}">
-                Volver al inicio de sesión
-            </a>
-        </div>
-    </form>
 </x-guest-layout>

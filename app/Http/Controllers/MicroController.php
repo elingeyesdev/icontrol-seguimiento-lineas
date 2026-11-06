@@ -2,25 +2,41 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\MicroRequest;
+use App\Models\Interno;
 use App\Models\Micro;
+use App\Models\Propietario;
+use App\Services\IntegridadAsignacionesService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use App\Http\Requests\MicroRequest;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class MicroController extends Controller
 {
+    public function __construct(protected IntegridadAsignacionesService $integridad) {}
+
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request): View
     {
         $buscar = $request->input('buscar');
-        $micros = Micro::where('placa', 'LIKE', '%' . $buscar . '%')
-                       ->orWhere('modelo', 'LIKE', '%' . $buscar . '%')
-                       ->orWhere('marca', 'LIKE', '%' . $buscar . '%')
-                       ->paginate(10);
+        $micros = Micro::with(['propietario', 'interno'])
+            ->where('estado', '!=', 'inactivo')
+            ->when($buscar, function ($query, $buscar) {
+                return $query->where(function ($subQuery) use ($buscar) {
+                    $subQuery->where('placa', 'LIKE', '%'.$buscar.'%')
+                        ->orWhere('modelo', 'LIKE', '%'.$buscar.'%')
+                        ->orWhere('marca', 'LIKE', '%'.$buscar.'%')
+                        ->orWhereHas('propietario', function ($q) use ($buscar) {
+                            $q->where('nombre', 'LIKE', "%{$buscar}%")
+                                ->orWhere('apellido', 'LIKE', "%{$buscar}%");
+                        });
+                });
+            })
+            ->paginate(10);
 
         return view('micro.index', compact('micros', 'buscar'));
     }
@@ -30,9 +46,11 @@ class MicroController extends Controller
      */
     public function create(): View
     {
-        $micro = new Micro();
+        $micro = new Micro;
+        $propietarios = Propietario::where('estado', 'activo')->orderBy('nombre')->get();
+        $internos = Interno::whereIn('estado', ['disponible', 'activo'])->orderBy('numero_interno')->get();
 
-        return view('micro.create', compact('micro'));
+        return view('micro.create', compact('micro', 'propietarios', 'internos'));
     }
 
     /**
@@ -40,10 +58,15 @@ class MicroController extends Controller
      */
     public function store(MicroRequest $request): RedirectResponse
     {
-        Micro::create($request->validated());
+        $micro = Micro::create($request->validated());
+
+        // Update interno estado to asignado if linked
+        if ($micro->interno_id) {
+            Interno::where('id', $micro->interno_id)->update(['estado' => 'asignado']);
+        }
 
         return Redirect::route('micro.index')
-            ->with('success', 'Micro created successfully.');
+            ->with('success', 'Micro creado correctamente.');
     }
 
     /**
@@ -51,7 +74,7 @@ class MicroController extends Controller
      */
     public function show($id): View
     {
-        $micro = Micro::find($id);
+        $micro = Micro::with(['propietario', 'interno'])->findOrFail($id);
 
         return view('micro.show', compact('micro'));
     }
@@ -61,27 +84,56 @@ class MicroController extends Controller
      */
     public function edit($id): View
     {
-        $micro = Micro::find($id);
+        $micro = Micro::findOrFail($id);
+        $propietarios = Propietario::orderBy('nombre')->get();
+        $internos = Interno::orderBy('numero_interno')->get();
 
-        return view('micro.edit', compact('micro'));
+        return view('micro.edit', compact('micro', 'propietarios', 'internos'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(MicroRequest $request, Micro $micro): RedirectResponse
+    public function update(MicroRequest $request, $id): RedirectResponse
     {
-        $micro->update($request->validated());
+        $micro = Micro::findOrFail($id);
+        $oldInternoId = $micro->interno_id;
+
+        $datos = $request->validated();
+        $this->integridad->asegurarCambioDeEstadoPermitido($micro, $datos);
+
+        $micro->update($datos);
+
+        if ($oldInternoId && $oldInternoId != $micro->interno_id) {
+            Interno::where('id', $oldInternoId)->update(['estado' => 'disponible']);
+        }
+        if ($micro->interno_id) {
+            Interno::where('id', $micro->interno_id)->update(['estado' => 'asignado']);
+        }
 
         return Redirect::route('micro.index')
-            ->with('success', 'Micro updated successfully');
+            ->with('success', 'Micro actualizado correctamente.');
     }
 
+    /**
+     * Logical delete: set estado to inactivo
+     */
     public function destroy($id): RedirectResponse
     {
-        Micro::find($id)->delete();
+        $micro = Micro::findOrFail($id);
+
+        try {
+            $this->integridad->desactivar($micro);
+        } catch (ValidationException $e) {
+            return Redirect::route('micro.index')
+                ->with('error', $e->validator->errors()->first('estado'));
+        }
+
+        if ($micro->interno_id) {
+            Interno::where('id', $micro->interno_id)->update(['estado' => 'disponible']);
+        }
 
         return Redirect::route('micro.index')
-            ->with('success', 'Micro deleted successfully');
+            ->with('success', 'Micro desactivado correctamente.');
     }
 }

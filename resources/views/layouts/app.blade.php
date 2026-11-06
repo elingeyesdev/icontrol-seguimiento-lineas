@@ -5,141 +5,75 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>@yield('template_title', config('app.name', 'Laravel'))</title>
+        <title>{{ config('app.name', 'Línea 61') }}</title>
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
-        <!-- Bootstrap CSS -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-        
-        <!-- Bootstrap Icons -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-
-        <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
-
-        <style>
-            :root {
-                --primary-color: #1A2D4F;
-                --accent-color: #E07B15;
-            }
-            body {
-                background-color: #f8f9fa;
-                overflow-x: hidden;
-            }
-            .sidebar {
-                background-color: var(--primary-color);
-                border-right: 3px solid var(--accent-color);
-                min-width: 260px;
-                max-width: 260px;
-                min-height: 100vh;
-                transition: all 0.3s ease;
-                z-index: 1035;
-            }
-            .sidebar .nav-link {
-                color: rgba(255, 255, 255, 0.75);
-                font-weight: 500;
-                padding: 0.75rem 1.25rem;
-                border-radius: 6px;
-                margin: 0.2rem 0.8rem;
-                display: flex;
-                align-items: center;
-                transition: all 0.2s ease;
-                text-decoration: none;
-            }
-            .sidebar .nav-link:hover {
-                color: #ffffff;
-                background-color: rgba(255, 255, 255, 0.1);
-                transform: translateX(3px);
-            }
-            .sidebar .nav-link.active {
-                color: #ffffff;
-                background-color: var(--accent-color);
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
-            }
-            .sidebar .menu-header {
-                color: rgba(255, 255, 255, 0.4);
-                font-size: 0.75rem;
-                text-transform: uppercase;
-                letter-spacing: 1px;
-                font-weight: 700;
-                padding: 1.25rem 1.25rem 0.5rem 1.25rem;
-            }
-            .text-warning-custom {
-                color: var(--accent-color);
-            }
-            .main-content {
-                min-height: 100vh;
-            }
-            
-            /* Responsive Sidebar Overlay */
-            .sidebar-overlay {
-                display: none;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.5);
-                z-index: 1030;
-                backdrop-filter: blur(2px);
-            }
-            
-            @media (max-width: 767.98px) {
-                .sidebar {
-                    position: fixed;
-                    left: -260px;
-                    height: 100%;
-                }
-                .sidebar.show {
-                    left: 0;
-                }
-                .sidebar-overlay.show {
-                    display: block;
-                }
-            }
-        </style>
     </head>
-    <body class="font-sans antialiased">
-        <div class="d-flex min-vh-100">
-            <!-- Overlay for mobile sidebar -->
-            <div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+    <body>
+        <div class="app-shell">
+            @include('layouts.navigation')
 
-            <!-- Sidebar -->
-            @include('layouts.sidebar')
+            <div class="sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true"></div>
 
-            <!-- Main Panel -->
-            <div class="flex-grow-1 d-flex flex-column min-w-0 main-content">
-                <!-- Top Nav -->
-                @include('layouts.navigation')
-
-                <!-- Page Heading -->
-                @isset($header)
-                    <header class="bg-white border-bottom shadow-sm">
-                        <div class="container-fluid py-3 px-4">
-                            {{ $header }}
+            <div class="content-area">
+                <header class="topbar">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                        <div class="d-flex align-items-center gap-2">
+                            <button id="sidebarToggle" class="sidebar-toggle" type="button"
+                                    aria-label="Abrir menú de navegación" aria-controls="sidebar"
+                                    aria-expanded="false">
+                                <i class="bi bi-list fs-5" aria-hidden="true"></i>
+                            </button>
+                            <div>
+                                <div class="topbar-brand-title">Sistema de Control y Seguimiento de Micros</div>
+                                <div class="topbar-brand-subtitle">
+                                    <span class="badge badge-soon me-1">Línea 61</span>
+                                    Santa Cruz de la Sierra · Bolivia
+                                </div>
+                            </div>
                         </div>
-                    </header>
-                @endisset
 
-                <!-- Page Content -->
-                <main class="flex-grow-1 p-3 p-md-4 bg-light">
-                    {{ $slot ?? '' }}
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="topbar-user d-flex align-items-center gap-2">
+                                <span class="avatar" aria-hidden="true">
+                                    {{ strtoupper(substr(Auth::user()->name ?? 'U', 0, 1)) }}
+                                </span>
+                                <span class="pe-1">
+                                    <span class="topbar-user-name d-block">{{ Auth::user()->name ?? 'Usuario' }}</span>
+                                    <span class="topbar-user-role d-block">{{ Auth::user()->roles->first()?->name ?? 'Sin rol' }}</span>
+                                </span>
+                            </div>
+                            <form method="POST" action="{{ route('logout') }}" class="m-0">
+                                @csrf
+                                <button type="submit" class="logout-btn btn d-flex align-items-center gap-1">
+                                    <i class="bi bi-box-arrow-right" aria-hidden="true"></i>
+                                    <span>Cerrar sesión</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </header>
+
+                <main class="p-3 p-lg-4">
+                    @if (session('error'))
+                        <div class="alert alert-soft-danger d-flex align-items-start gap-2" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill mt-1" aria-hidden="true"></i>
+                            <div>{{ session('error') }}</div>
+                        </div>
+                    @endif
+
                     @yield('content')
+                    {{ $slot ?? '' }}
                 </main>
             </div>
         </div>
 
-        <!-- Bootstrap JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        
-        <script>
-            function toggleSidebar() {
-                document.getElementById('sidebar').classList.toggle('show');
-                document.getElementById('sidebarOverlay').classList.toggle('show');
-            }
-        </script>
     </body>
 </html>
