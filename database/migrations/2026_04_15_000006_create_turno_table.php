@@ -13,11 +13,10 @@ return new class extends Migration
     {
         Schema::create('turno', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('interno_id')->constrained('interno')->onDelete('cascade');
-            $table->foreignId('ruta_id')->constrained('ruta')->onDelete('cascade');
-            $table->datetime('hora_inicio');
-            $table->datetime('hora_fin');
-            $table->date('fecha_laboral');
+            $table->enum('tipo', ['mañana', 'tarde', 'noche']);
+            $table->time('hora_inicio');
+            $table->time('hora_fin');
+            $table->foreignId('fiscalizador_id')->nullable()->constrained('fiscalizadors')->nullOnDelete();
             $table->timestamps();
         });
     }

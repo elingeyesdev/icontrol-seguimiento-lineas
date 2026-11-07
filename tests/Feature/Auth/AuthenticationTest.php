@@ -4,6 +4,7 @@ namespace Tests\Feature\Auth;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
@@ -20,6 +21,8 @@ class AuthenticationTest extends TestCase
     public function test_users_can_authenticate_using_the_login_screen(): void
     {
         $user = User::factory()->create();
+        Role::create(['name' => 'admin', 'guard_name' => 'web']);
+        $user->assignRole('admin');
 
         $response = $this->post('/login', [
             'email' => $user->email,

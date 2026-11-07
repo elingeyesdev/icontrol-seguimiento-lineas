@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Iniciar sesión · Línea 61</title>
+<style>
+  :root{
+    --blanco: #FDFBF6;
+    --crema: #F3E9D8;
+    --rojo: #C0392B;
+    --rojo-oscuro: #7A1F1F;
+    --guinda: #4A1414;
+    --amarillo: #E8B84B;
+    --carbon: #2C2420;
+    --texto-suave: #6E6259;
+    --borde: #E4D9C8;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body{
+    margin:0;
+    min-height:100%;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+  }
+
+  body{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 40px 16px;
+    background: var(--crema);
+    background-image:
+      radial-gradient(circle at 15% 20%, rgba(192,57,43,0.10) 0, transparent 40%),
+      radial-gradient(circle at 85% 80%, rgba(122,31,31,0.12) 0, transparent 40%);
+  }
+
+  .card{
+    width: 100%;
+    max-width: 860px;
+    min-height: 480px;
+    background: var(--blanco);
+    border-radius: 24px;
+    box-shadow: 0 30px 60px rgba(74,20,20,0.18);
+    display:flex;
+    overflow:hidden;
+  }
+
+  /* ---------- Panel izquierdo ilustrado ---------- */
+  .illustration{
+    flex: 1;
+    position: relative;
+    background: var(--blanco);
+    overflow:hidden;
+    padding: 44px 40px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+  }
+
+  .illustration .blob-red{
+    position:absolute;
+    right: -60px;
+    bottom: -60px;
+    width: 320px;
+    height: 320px;
+    background: var(--rojo);
+    border-radius: 58% 42% 65% 35% / 45% 55% 45% 55%;
+    z-index: 0;
+  }
+  .illustration .blob-yellow{
+    position:absolute;
+    right: 20px;
+    top: -40px;
+    width: 190px;
+    height: 190px;
+    background: var(--amarillo);
+    border-radius: 50% 50% 40% 60% / 55% 45% 55% 45%;
+    z-index: 0;
+  }
+  .illustration .dot-guinda{
+    position:absolute;
+    left: 28px;
+    top: 34px;
+    width: 14px; height:14px;
+    border-radius:50%;
+    background: var(--rojo-oscuro);
+  }
+  .illustration .dot-carbon{
+    position:absolute;
+    left: 70px;
+    bottom: 60px;
+    width: 12px; height:12px;
+    border-radius:50%;
+    background: var(--carbon);
+  }
+  .illustration .squiggle{
+    position:absolute;
+    top: 22px;
+    left: 70px;
+    width: 130px;
+    opacity: .55;
+  }
+  .illustration .dashes{
+    position:absolute;
+    right: 210px;
+    bottom: 130px;
+    width: 60px;
+    opacity: .6;
+  }
+  .illustration .route-tag{
+    position: relative;
+    z-index: 2;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background: var(--guinda);
+    color: var(--blanco);
+    font-weight: 800;
+    font-size: 12px;
+    letter-spacing: .04em;
+    padding: 4px 10px;
+    border-radius: 6px;
+    margin-bottom: 18px;
+    width: fit-content;
+  }
+  .illustration .route-tag .num{
+    background: var(--rojo);
+    padding: 1px 8px;
+    border-radius: 4px;
+  }
+
+  .illustration h1{
+    position: relative;
+    z-index: 2;
+    margin: 0 0 12px;
+    font-size: 30px;
+    font-weight: 800;
+    color: var(--carbon);
+    max-width: 260px;
+    line-height: 1.15;
+  }
+  .illustration p{
+    position: relative;
+    z-index: 2;
+    margin: 0;
+    font-size: 14px;
+    color: var(--texto-suave);
+    max-width: 230px;
+    line-height: 1.55;
+  }
+
+  /* ---------- Panel derecho: formulario ---------- */
+  .panel{
+    flex: 1;
+    padding: 48px 44px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    border-left: 1px solid var(--borde);
+  }
+
+  .panel h2{
+    margin: 0 0 26px;
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--carbon);
+  }
+
+  .field{
+    position:relative;
+    margin-bottom: 16px;
+  }
+  .field input{
+    width: 100%;
+    padding: 12px 14px 12px 38px;
+    border: 1.5px solid var(--borde);
+    border-radius: 10px;
+    background: var(--crema);
+    font-size: 14px;
+    color: var(--carbon);
+    outline: none;
+    transition: border-color .15s, box-shadow .15s, background .15s;
+  }
+  .field input:focus{
+    border-color: var(--rojo);
+    background: var(--blanco);
+    box-shadow: 0 0 0 3px rgba(192,57,43,0.15);
+  }
+  .field input::placeholder{ color:#B9AA96; }
+  .field .icon{
+    position:absolute;
+    left: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 13px;
+    color: var(--rojo-oscuro);
+    opacity:.8;
+  }
+
+  .options{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin: 2px 0 22px;
+    font-size: 12.5px;
+    color: var(--texto-suave);
+  }
+  .options label{
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .options input[type="checkbox"]{
+    accent-color: var(--rojo);
+  }
+  .options a{
+    color: var(--rojo-oscuro);
+    font-weight: 700;
+    text-decoration:none;
+  }
+
+  .submit{
+    width: 100%;
+    padding: 13px;
+    border: none;
+    border-radius: 999px;
+    background: var(--rojo);
+    color: var(--blanco);
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: .02em;
+    cursor: pointer;
+    transition: background .15s, transform .1s;
+  }
+  .submit:hover{ background: var(--rojo-oscuro); }
+  .submit:active{ transform: translateY(1px); }
+
+  .foot{
+    text-align:center;
+    margin-top: 18px;
+    font-size: 12.5px;
+    color: var(--texto-suave);
+  }
+  .foot a{ color: var(--rojo-oscuro); font-weight: 700; text-decoration:none; }
+
+  @media (max-width: 720px){
+    .card{ flex-direction: column; }
+    .illustration{ min-height: 220px; }
+    .panel{ border-left:none; border-top: 1px solid var(--borde); }
+  }
+</style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="illustration">
+      <span class="dot-guinda"></span>
+      <span class="dot-carbon"></span>
+      <svg class="squiggle" viewBox="0 0 130 60" fill="none">
+        <path d="M2 40 C 20 5, 40 5, 55 25 C 68 42, 85 10, 100 20 C 112 27, 118 45, 128 30"
+              stroke="#4A1414" stroke-width="2"/>
+      </svg>
+      <svg class="dashes" viewBox="0 0 60 20" fill="none">
+        <path d="M2 10 Q 8 2, 14 10 T 26 10 T 38 10 T 50 10" stroke="#7A1F1F" stroke-width="2"/>
+      </svg>
+
+      <div class="route-tag"><span class="num">61</span> LÍNEA</div>
+      <h1>¡Bienvenido de vuelta!</h1>
+      <p>Inicia sesión para acceder con tu cuenta existente.</p>
+
+      <div class="blob-yellow"></div>
+      <div class="blob-red"></div>
+    </div>
+
+    <div class="panel">
+      <h2>Iniciar sesión</h2>
+
+      <div class="field">
+        <span class="icon">&#128100;</span>
+        <input type="text" placeholder="Usuario o correo">
+      </div>
+      <div class="field">
+        <span class="icon">&#128274;</span>
+        <input type="password" placeholder="Contraseña">
+      </div>
+
+      <div class="options">
+        <label><input type="checkbox" checked> Recordarme</label>
+        <a href="#">¿Olvidaste tu contraseña?</a>
+      </div>
+
+      <button class="submit">Iniciar sesión</button>
+      <p class="foot">¿No tienes cuenta? <a href="#">Crea una</a></p>
+    </div>
+  </div>
+
+</body>
+</html>

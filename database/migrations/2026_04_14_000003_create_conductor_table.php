@@ -14,10 +14,11 @@ return new class extends Migration
         Schema::create('conductor', function (Blueprint $table) {
             $table->id();
             $table->string('nombre', 30);
-            $table ->string('apellido', 30);
+            $table->string('apellido', 30);
             $table->string('telefono', 15);
             $table->string('correo', 50)->unique();
             $table->string('ci', 20)->unique();
+            $table->enum('estado', ['activo', 'inactivo'])->default('activo');
             $table->timestamps();
         });
     }

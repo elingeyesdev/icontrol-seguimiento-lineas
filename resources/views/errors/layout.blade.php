@@ -1,53 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noindex">
 
-        <title>@yield('title')</title>
+        <title>@yield('title', 'Error') · Línea 61</title>
 
-        <!-- Styles -->
-        <style>
-            html, body {
-                background-color: #fff;
-                color: #636b6f;
-                font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-                font-weight: 100;
-                height: 100vh;
-                margin: 0;
-            }
-
-            .full-height {
-                height: 100vh;
-            }
-
-            .flex-center {
-                align-items: center;
-                display: flex;
-                justify-content: center;
-            }
-
-            .position-ref {
-                position: relative;
-            }
-
-            .content {
-                text-align: center;
-            }
-
-            .title {
-                font-size: 36px;
-                padding: 20px;
-            }
-        </style>
+        @vite('resources/css/errors.css')
     </head>
     <body>
-        <div class="flex-center position-ref full-height">
-            <div class="content">
-                <div class="title">
-                    @yield('message')
+        <main class="error-shell" id="contenido-principal">
+            <div class="error-brand">
+                <span class="error-brand-mark" aria-hidden="true">61</span>
+                <span class="error-brand-text">
+                    <span class="error-brand-name">Línea 61</span>
+                    <span class="error-brand-tagline">Control y monitoreo de flota</span>
+                </span>
+            </div>
+
+            <div class="error-card">
+                @hasSection('code')
+                    <p class="error-code">Error @yield('code')</p>
+                @endif
+
+                <h1 class="error-title">@yield('title', 'Ocurrió un error')</h1>
+
+                <p class="error-message">
+                    @yield('message', 'No fue posible completar la solicitud. Inténtalo nuevamente en unos instantes.')
+                </p>
+
+                <div class="error-actions">
+                    <a class="error-btn error-btn--primary" href="{{ url('/') }}">Ir al inicio</a>
+                    <a class="error-btn error-btn--secondary" href="{{ url('/login') }}">Iniciar sesión</a>
                 </div>
             </div>
-        </div>
+
+            <p class="error-footer">
+                Si el problema continúa, comunícate con el administrador del sistema.
+            </p>
+        </main>
     </body>
 </html>

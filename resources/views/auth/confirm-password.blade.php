@@ -1,27 +1,36 @@
-<x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-        {{ __('This is a secure area of the application. Please confirm your password before continuing.') }}
+<x-guest-layout title="Confirmar contraseña">
+    <div class="auth-single">
+        <div class="auth-card">
+            <div class="auth-card-brand">
+                <x-auth-brand compact />
+            </div>
+
+            <x-auth-heading
+                align="center"
+                icon="bi-shield-lock"
+                eyebrow="Confirmación"
+                title="Área protegida"
+                description="Por seguridad, confirma tu contraseña antes de continuar."
+            />
+
+            <form method="POST" action="{{ route('password.confirm') }}">
+                @csrf
+
+                <x-auth-field
+                    name="password"
+                    label="Contraseña"
+                    type="password"
+                    icon="bi-lock"
+                    placeholder="••••••••"
+                    autocomplete="current-password"
+                    :required="true"
+                />
+
+                <button type="submit" class="auth-btn auth-btn--primary auth-btn--block auth-submit">
+                    Confirmar
+                    <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                </button>
+            </form>
+        </div>
     </div>
-
-    <form method="POST" action="{{ route('password.confirm') }}">
-        @csrf
-
-        <!-- Password -->
-        <div>
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <div class="flex justify-end mt-4">
-            <x-primary-button>
-                {{ __('Confirm') }}
-            </x-primary-button>
-        </div>
-    </form>
 </x-guest-layout>

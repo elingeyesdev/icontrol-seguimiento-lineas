@@ -1,568 +1,442 @@
-
-Welcome linea57.blade · PHP
-Copiar
-
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Línea 57 — {{ config('app.name', 'Laravel') }}</title>
- 
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;1,600&family=Barlow:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
- 
-        @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-            @vite(['resources/css/app.css', 'resources/js/app.js'])
-        @endif
- 
-        <style>
-            :root {
-                --amber:      #E07B15;
-                --amber-lt:   #F4A23A;
-                --amber-bg:   #FEF3E2;
-                --navy:       #1A2D4F;
-                --navy-lt:    #243C6A;
-                --navy-bg:    #EBF0F8;
-                --cream:      #F9F7F4;
-                --ink:        #131A27;
-                --ink-soft:   #5B6472;
-                --rule:       rgba(19,26,39,.10);
-                --white:      #FFFFFF;
-            }
- 
-            *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-            html { font-size: 16px; }
- 
-            body {
-                font-family: 'Barlow', sans-serif;
-                background: var(--cream);
-                color: var(--ink);
-                min-height: 100vh;
-                display: flex;
-                flex-direction: column;
-                overflow-x: hidden;
-            }
- 
-            /* horizontal rule stripe at top */
-            body::before {
-                content: '';
-                position: fixed;
-                top: 0; left: 0; right: 0;
-                height: 4px;
-                background: repeating-linear-gradient(
-                    90deg,
-                    var(--amber) 0px,
-                    var(--amber) 28px,
-                    var(--navy) 28px,
-                    var(--navy) 56px
-                );
-                z-index: 100;
-            }
- 
-            .page {
-                position: relative;
-                z-index: 1;
-                display: flex;
-                flex-direction: column;
-                min-height: 100vh;
-                padding: 0 1.5rem;
-            }
- 
-            /* ── header / nav ── */
-            header {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                padding: 1.4rem 0 1rem;
-                border-bottom: 1px solid var(--rule);
-            }
- 
-            .brand {
-                display: flex;
-                align-items: center;
-                gap: .75rem;
-            }
- 
-            .line-badge {
-                font-family: 'Barlow Condensed', sans-serif;
-                font-weight: 700;
-                font-size: 1.5rem;
-                color: var(--white);
-                background: var(--amber);
-                width: 48px; height: 48px;
-                border-radius: 8px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                letter-spacing: -.02em;
-                flex-shrink: 0;
-            }
- 
-            .brand-text {
-                display: flex;
-                flex-direction: column;
-            }
- 
-            .brand-name {
-                font-family: 'Barlow Condensed', sans-serif;
-                font-weight: 600;
-                font-size: 1rem;
-                letter-spacing: .04em;
-                text-transform: uppercase;
-                color: var(--navy);
-                line-height: 1;
-            }
- 
-            .brand-sub {
-                font-family: 'DM Mono', monospace;
-                font-size: .65rem;
-                color: var(--ink-soft);
-                letter-spacing: .06em;
-                margin-top: 2px;
-            }
- 
-            .nav-links { display: flex; gap: .5rem; }
- 
-            .nav-link {
-                font-family: 'DM Mono', monospace;
-                font-size: .7rem;
-                letter-spacing: .08em;
-                text-transform: uppercase;
-                text-decoration: none;
-                padding: .4rem .9rem;
-                border-radius: 4px;
-                border: 1px solid var(--rule);
-                color: var(--ink-soft);
-                transition: all .18s ease;
-                background: transparent;
-            }
-            .nav-link:hover { border-color: var(--amber); color: var(--amber); }
-            .nav-link.solid {
-                background: var(--navy);
-                border-color: var(--navy);
-                color: var(--white);
-            }
-            .nav-link.solid:hover {
-                background: var(--navy-lt);
-                border-color: var(--navy-lt);
-            }
- 
-            /* ── main ── */
-            main {
-                flex: 1;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                padding: 3rem 0 4rem;
-            }
- 
-            .shell {
-                width: 100%;
-                max-width: 920px;
-                display: grid;
-                grid-template-columns: 1fr;
-                border-radius: 12px;
-                overflow: hidden;
-                border: 1px solid var(--rule);
-                box-shadow: 0 4px 24px rgba(19,26,39,.07);
-                animation: up .5s cubic-bezier(.22,1,.36,1) both;
-            }
- 
-            @keyframes up {
-                from { opacity: 0; transform: translateY(18px); }
-                to   { opacity: 1; transform: translateY(0); }
-            }
- 
-            @media (min-width: 700px) {
-                .shell { grid-template-columns: 1fr 380px; }
-            }
- 
-            /* ── left panel ── */
-            .panel-left {
-                background: var(--white);
-                padding: 2.5rem 2.5rem 2rem;
-                display: flex;
-                flex-direction: column;
-                gap: 1.75rem;
-            }
- 
-            .kicker {
-                font-family: 'DM Mono', monospace;
-                font-size: .68rem;
-                letter-spacing: .12em;
-                text-transform: uppercase;
-                color: var(--amber);
-                display: flex;
-                align-items: center;
-                gap: .5rem;
-            }
-            .kicker::before {
-                content: '';
-                width: 18px; height: 2px;
-                background: var(--amber);
-                display: block;
-            }
- 
-            .headline {
-                font-family: 'Barlow Condensed', sans-serif;
-                font-weight: 700;
-                font-size: clamp(2rem, 5vw, 2.8rem);
-                line-height: 1.05;
-                letter-spacing: -.01em;
-                color: var(--navy);
-            }
-            .headline span {
-                color: var(--amber);
-                font-style: italic;
-            }
- 
-            .body-text {
-                font-size: .9rem;
-                line-height: 1.7;
-                color: var(--ink-soft);
-                font-weight: 300;
-                max-width: 40ch;
-            }
- 
-            /* ── steps ── */
-            .steps { list-style: none; }
- 
-            .step {
-                display: grid;
-                grid-template-columns: 20px 1fr;
-                gap: .75rem;
-                align-items: start;
-                padding: .8rem 0;
-                border-bottom: 1px dashed var(--rule);
-            }
-            .step:last-child { border-bottom: none; }
- 
-            .step-n {
-                font-family: 'DM Mono', monospace;
-                font-size: .6rem;
-                color: var(--amber);
-                letter-spacing: .06em;
-                padding-top: 3px;
-            }
- 
-            .step-txt {
-                font-size: .875rem;
-                color: var(--ink-soft);
-                line-height: 1.5;
-            }
- 
-            .link {
-                color: var(--navy);
-                font-weight: 500;
-                text-decoration: none;
-                border-bottom: 1.5px solid rgba(26,45,79,.25);
-                padding-bottom: 1px;
-                display: inline-flex;
-                align-items: center;
-                gap: .25rem;
-                transition: all .15s;
-            }
-            .link:hover { color: var(--amber); border-color: var(--amber); }
- 
-            /* ── CTA ── */
-            .cta-row { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
- 
-            .btn {
-                font-family: 'Barlow Condensed', sans-serif;
-                font-size: .95rem;
-                font-weight: 600;
-                letter-spacing: .06em;
-                text-transform: uppercase;
-                text-decoration: none;
-                padding: .6rem 1.5rem;
-                border-radius: 5px;
-                display: inline-flex;
-                align-items: center;
-                gap: .5rem;
-                transition: all .18s ease;
-                border: 2px solid transparent;
-            }
- 
-            .btn-primary {
-                background: var(--amber);
-                color: var(--white);
-                border-color: var(--amber);
-            }
-            .btn-primary:hover {
-                background: var(--amber-lt);
-                border-color: var(--amber-lt);
-                transform: translateY(-1px);
-            }
- 
-            .version-tag {
-                font-family: 'DM Mono', monospace;
-                font-size: .65rem;
-                color: var(--ink-soft);
-                opacity: .55;
-                margin-top: auto;
-                display: flex;
-                gap: .6rem;
-                align-items: center;
-            }
-            .version-tag a { color: var(--navy); opacity: 1; text-decoration: none; }
-            .version-tag a:hover { text-decoration: underline; }
- 
-            /* ── right panel ── */
-            .panel-right {
-                background: var(--navy);
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                padding: 2.5rem 2rem;
-                position: relative;
-                overflow: hidden;
-                min-height: 280px;
-                gap: 1.5rem;
-            }
- 
-            /* diagonal lines texture */
-            .panel-right::before {
-                content: '';
-                position: absolute;
-                inset: 0;
-                background-image: repeating-linear-gradient(
-                    -45deg,
-                    rgba(255,255,255,.025) 0px,
-                    rgba(255,255,255,.025) 1px,
-                    transparent 1px,
-                    transparent 14px
-                );
-            }
- 
-            /* amber bottom accent */
-            .panel-right::after {
-                content: '';
-                position: absolute;
-                bottom: 0; left: 0; right: 0;
-                height: 3px;
-                background: linear-gradient(90deg, var(--amber) 0%, var(--amber-lt) 100%);
-            }
- 
-            /* the bus illustration */
-            .bus-wrap {
-                position: relative;
-                z-index: 1;
-                width: 100%;
-                max-width: 300px;
-                animation: up .7s .1s cubic-bezier(.22,1,.36,1) both;
-            }
- 
-            .route-chip {
-                position: relative;
-                z-index: 1;
-                font-family: 'Barlow Condensed', sans-serif;
-                font-weight: 600;
-                font-size: .8rem;
-                letter-spacing: .1em;
-                text-transform: uppercase;
-                color: rgba(255,255,255,.55);
-                border: 1px solid rgba(255,255,255,.12);
-                padding: .35rem 1rem;
-                border-radius: 100px;
-                background: rgba(255,255,255,.05);
-            }
- 
-            .stops-list {
-                position: relative;
-                z-index: 1;
-                display: flex;
-                flex-direction: column;
-                gap: .4rem;
-                width: 100%;
-                max-width: 260px;
-            }
- 
-            .stop-row {
-                display: flex;
-                align-items: center;
-                gap: .6rem;
-                font-size: .75rem;
-                color: rgba(255,255,255,.55);
-                font-family: 'DM Mono', monospace;
-            }
- 
-            .stop-dot {
-                width: 6px; height: 6px;
-                border-radius: 50%;
-                background: var(--amber);
-                flex-shrink: 0;
-            }
- 
-            .stop-dot.dim { background: rgba(255,255,255,.25); }
- 
-            .stop-line {
-                width: 1px; height: 12px;
-                background: rgba(255,255,255,.15);
-                margin-left: 2.5px;
-            }
- 
-            /* dark mode */
-            @media (prefers-color-scheme: dark) {
-                :root {
-                    --cream:   #0C1117;
-                    --white:   #141B25;
-                    --ink:     #DDE3EC;
-                    --ink-soft:#7A8594;
-                    --rule:    rgba(255,255,255,.08);
-                    --amber-bg: rgba(224,123,21,.1);
-                    --navy-bg:  rgba(26,45,79,.2);
-                }
-                .panel-right { background: #0F1D33; }
-            }
- 
-            @media (max-width: 699px) {
-                .panel-right { order: -1; }
-                .panel-left  { padding: 2rem 1.5rem; }
-                header { flex-direction: column; align-items: flex-start; gap: .75rem; }
-            }
-        </style>
-    </head>
-    <body>
-        <div class="page">
-            <header>
-                <div class="brand">
-                    <div class="line-badge">57</div>
-                    <div class="brand-text">
-                        <span class="brand-name">Línea 57</span>
-                        <span class="brand-sub">Servicio urbano de transporte</span>
-                    </div>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Línea 61 | Sistema de Control & Monitoreo</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap 5 CSS & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+    <style>
+        :root {
+            --navy-dark: #071E3D;
+            --navy-card: #182C4D;
+            --navy-blue: #0B3C78;
+            --accent-guindo: #7B1E2B;
+            --accent-guindo-hover: #9E2235;
+            --surface-light: #F8FAFC;
+            --text-dark: #0F172A;
+            --text-muted: #64748B;
+            --border-light: #E2E8F0;
+        }
+
+        * {
+            font-family: 'Inter', sans-serif;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--surface-light);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        /* Top Navbar */
+        .landing-navbar {
+            background: #071E3D;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 0.85rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .brand-logo-badge {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(123,30,43,0.95) 100%);
+            border: 1.5px solid rgba(255,255,255,0.35);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFFFFF;
+        }
+
+        /* Botones de Alta Visibilidad para Navbar */
+        .btn-nav-login {
+            background-color: #FFFFFF !important;
+            color: #071E3D !important;
+            border: 1.5px solid #FFFFFF !important;
+            border-radius: 9px !important;
+            font-weight: 700 !important;
+            font-size: 0.9rem !important;
+            padding: 0.55rem 1.25rem !important;
+            transition: all 0.2s ease !important;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            text-decoration: none !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        .btn-nav-login:hover {
+            background-color: #F1F5F9 !important;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-nav-register {
+            background: linear-gradient(135deg, #7B1E2B 0%, #9E2235 100%) !important;
+            color: #FFFFFF !important;
+            border: 1.5px solid #9E2235 !important;
+            border-radius: 9px !important;
+            font-weight: 700 !important;
+            font-size: 0.9rem !important;
+            padding: 0.55rem 1.25rem !important;
+            transition: all 0.2s ease !important;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            text-decoration: none !important;
+            box-shadow: 0 2px 10px rgba(123, 30, 43, 0.4);
+        }
+        .btn-nav-register:hover {
+            background: linear-gradient(135deg, #9E2235 0%, #B91C1C 100%) !important;
+            border-color: #B91C1C !important;
+            color: #FFFFFF !important;
+            transform: translateY(-1px);
+        }
+
+        /* Hero Section con GIF traffvehicular.gif */
+        .hero-section {
+            position: relative;
+            background: #071E3D url('{{ asset('images/traffvehicular.gif') }}') center center / cover no-repeat;
+            min-height: 540px;
+            display: flex;
+            align-items: center;
+            padding: 4.5rem 0 5.5rem 0;
+            overflow: hidden;
+            border-bottom: 5px solid var(--accent-guindo);
+        }
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(7, 30, 61, 0.92) 0%, rgba(11, 60, 120, 0.85) 55%, rgba(123, 30, 43, 0.88) 100%);
+            z-index: 1;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Botones de Acción del Hero */
+        .btn-hero-primary {
+            background: linear-gradient(135deg, #7B1E2B 0%, #9E2235 100%) !important;
+            color: #FFFFFF !important;
+            border: 2px solid #9E2235 !important;
+            border-radius: 12px !important;
+            font-weight: 700 !important;
+            font-size: 1.05rem !important;
+            padding: 0.85rem 1.85rem !important;
+            transition: all 0.2s ease !important;
+            box-shadow: 0 6px 20px rgba(123, 30, 43, 0.5) !important;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            text-decoration: none !important;
+        }
+        .btn-hero-primary:hover {
+            background: linear-gradient(135deg, #9E2235 0%, #B91C1C 100%) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(123, 30, 43, 0.65) !important;
+        }
+
+        .btn-hero-secondary {
+            background-color: #FFFFFF !important;
+            color: #071E3D !important;
+            border: 2px solid #FFFFFF !important;
+            border-radius: 12px !important;
+            font-weight: 700 !important;
+            font-size: 1.05rem !important;
+            padding: 0.85rem 1.85rem !important;
+            transition: all 0.2s ease !important;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25) !important;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            text-decoration: none !important;
+        }
+        .btn-hero-secondary:hover {
+            background-color: #F1F5F9 !important;
+            color: #071E3D !important;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35) !important;
+        }
+
+        /* Feature Cards */
+        .feature-card-custom {
+            background: #FFFFFF;
+            border: 1.5px solid var(--border-light);
+            border-radius: 16px;
+            padding: 2.2rem 1.8rem;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+        .feature-card-custom::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--navy-blue) 0%, var(--accent-guindo) 100%);
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+        .feature-card-custom:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 16px 36px rgba(11, 60, 120, 0.12);
+            border-color: #CBD5E1;
+        }
+        .feature-card-custom:hover::before {
+            opacity: 1;
+        }
+
+        .feature-icon-box {
+            width: 54px;
+            height: 54px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.25rem;
+        }
+        .icon-box-blue {
+            background: rgba(11, 60, 120, 0.12);
+            color: var(--navy-blue);
+        }
+        .icon-box-guindo {
+            background: rgba(123, 30, 43, 0.12);
+            color: var(--accent-guindo);
+        }
+
+        /* Footer */
+        .landing-footer {
+            background: var(--navy-dark);
+            color: rgba(255, 255, 255, 0.75);
+            padding: 2.5rem 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navbar -->
+    <nav class="landing-navbar">
+        <div class="container d-flex align-items-center justify-content-between">
+            <a href="{{ url('/') }}" class="d-flex align-items-center gap-3 text-decoration-none text-white">
+                <div class="brand-logo-badge">
+                    <i class="bi bi-bus-front fs-4"></i>
                 </div>
- 
+                <div>
+                    <h5 class="fw-bold mb-0 text-white" style="letter-spacing: -0.3px;">Línea 61</h5>
+                    <span class="small text-white-50" style="font-size: 0.75rem;">Control Operativo de Micros</span>
+                </div>
+            </a>
+
+            <div>
                 @if (Route::has('login'))
-                    <nav class="nav-links">
+                    <div class="d-flex align-items-center gap-2">
                         @auth
-                            <a href="{{ url('/dashboard') }}" class="nav-link solid">Dashboard</a>
+                            <a href="{{ url('/dashboard') }}" class="btn-nav-register">
+                                <i class="bi bi-grid-1x2"></i>
+                                <span>Panel de Control</span>
+                            </a>
                         @else
-                            <a href="{{ route('login') }}" class="nav-link">Ingresar</a>
+                            <a href="{{ route('login') }}" class="btn-nav-login">
+                                <i class="bi bi-box-arrow-in-right"></i>
+                                <span>Ingresar</span>
+                            </a>
                             @if (Route::has('register'))
-                                <a href="{{ route('register') }}" class="nav-link solid">Registrarse</a>
+                                <a href="{{ route('register') }}" class="btn-nav-register">
+                                    <i class="bi bi-person-plus"></i>
+                                    <span>Registrarse</span>
+                                </a>
                             @endif
                         @endauth
-                    </nav>
-                @endif
-            </header>
- 
-            <main>
-                <div class="shell">
-                    <!-- izquierda -->
-                    <div class="panel-left">
-                        <p class="kicker">Plataforma de gestión</p>
- 
-                        <h1 class="headline">
-                            Tu recorrido,<br>
-                            <span>siempre en hora.</span>
-                        </h1>
- 
-                        <p class="body-text">
-                            Sistema de administración para la línea 57. Consultá horarios, gestioná paradas y coordiná el servicio desde un solo lugar.
-                        </p>
- 
-                        <ul class="steps">
-                            <li class="step">
-                                <span class="step-n">01</span>
-                                <p class="step-txt">
-                                    Revisá la
-                                    <a href="https://laravel.com/docs" target="_blank" class="link">
-                                        documentación técnica
-                                        <svg width="9" height="9" viewBox="0 0 10 10" fill="none"><path d="M7.5 6.5V2.5H3.5M2 8L7.5 2.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-                                    </a>
-                                    para configurar el sistema.
-                                </p>
-                            </li>
-                            <li class="step">
-                                <span class="step-n">02</span>
-                                <p class="step-txt">
-                                    Seguí los tutoriales en
-                                    <a href="https://laracasts.com" target="_blank" class="link">
-                                        Laracasts
-                                        <svg width="9" height="9" viewBox="0 0 10 10" fill="none"><path d="M7.5 6.5V2.5H3.5M2 8L7.5 2.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-                                    </a>
-                                    si necesitás soporte extra.
-                                </p>
-                            </li>
-                        </ul>
- 
-                        <div class="cta-row">
-                            <a href="https://cloud.laravel.com" target="_blank" class="btn btn-primary">
-                                <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M7 1v8M4 6l3 3 3-3M2 11h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                                Desplegar sistema
-                            </a>
-                        </div>
- 
-                        <p class="version-tag">
-                            Laravel v{{ app()->version() }} &nbsp;·&nbsp;
-                            <a href="https://github.com/laravel/laravel/blob/13.x/CHANGELOG.md" target="_blank">Ver changelog ↗</a>
-                        </p>
                     </div>
- 
-                    <!-- derecha: ilustración micro + paradas -->
-                    <div class="panel-right">
-                        <!-- SVG bus -->
-                        <div class="bus-wrap">
-                            <svg viewBox="0 0 300 130" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <!-- carrocería -->
-                                <rect x="8" y="22" width="270" height="82" rx="10" fill="#1E3558"/>
-                                <!-- franja naranja lateral -->
-                                <rect x="8" y="52" width="270" height="16" fill="#E07B15"/>
-                                <!-- techo -->
-                                <rect x="16" y="14" width="255" height="14" rx="5" fill="#162C4A"/>
-                                <!-- parabrisas delantero -->
-                                <rect x="248" y="28" width="24" height="34" rx="4" fill="#2E5A8A" opacity=".9"/>
-                                <!-- ventanas laterales -->
-                                <rect x="24"  y="28" width="36" height="20" rx="3" fill="#2E5A8A" opacity=".85"/>
-                                <rect x="68"  y="28" width="36" height="20" rx="3" fill="#2E5A8A" opacity=".85"/>
-                                <rect x="112" y="28" width="36" height="20" rx="3" fill="#2E5A8A" opacity=".85"/>
-                                <rect x="156" y="28" width="36" height="20" rx="3" fill="#2E5A8A" opacity=".85"/>
-                                <rect x="200" y="28" width="36" height="20" rx="3" fill="#2E5A8A" opacity=".85"/>
-                                <!-- destino chip -->
-                                <rect x="24" y="33" width="92" height="10" rx="2" fill="#E07B15" opacity=".2"/>
-                                <text x="70" y="41" text-anchor="middle" font-family="'Barlow Condensed', sans-serif" font-size="8" font-weight="700" fill="#F4A23A" letter-spacing="1">CENTRO — TERMINAL</text>
-                                <!-- número de línea en frente -->
-                                <rect x="252" y="32" width="18" height="14" rx="2" fill="#E07B15"/>
-                                <text x="261" y="43" text-anchor="middle" font-family="'Barlow Condensed', sans-serif" font-size="9" font-weight="700" fill="white">57</text>
-                                <!-- puerta -->
-                                <rect x="196" y="62" width="18" height="38" rx="2" fill="#132338" opacity=".6"/>
-                                <line x1="205" y1="62" x2="205" y2="100" stroke="#E07B15" stroke-width=".8" opacity=".4"/>
-                                <!-- ruedas -->
-                                <circle cx="52"  cy="108" r="16" fill="#0C1D33"/>
-                                <circle cx="52"  cy="108" r="9"  fill="#162C4A"/>
-                                <circle cx="52"  cy="108" r="4"  fill="#E07B15" opacity=".6"/>
-                                <circle cx="234" cy="108" r="16" fill="#0C1D33"/>
-                                <circle cx="234" cy="108" r="9"  fill="#162C4A"/>
-                                <circle cx="234" cy="108" r="4"  fill="#E07B15" opacity=".6"/>
-                                <!-- suelo / sombra -->
-                                <ellipse cx="143" cy="124" rx="130" ry="5" fill="#0C1D33" opacity=".25"/>
-                                <!-- luz delantera -->
-                                <rect x="270" y="60" width="10" height="8" rx="2" fill="#F4A23A" opacity=".8"/>
-                                <!-- luz trasera -->
-                                <rect x="8" y="60" width="8" height="8" rx="2" fill="#E07B15" opacity=".7"/>
-                            </svg>
-                        </div>
- 
-                        <span class="route-chip">Recorrido activo</span>
- 
-                        <div class="stops-list">
-                            <div class="stop-row"><div class="stop-dot"></div><span>Terminal de Ómnibus</span></div>
-                            <div class="stop-row"><div class="stop-line"></div></div>
-                            <div class="stop-row"><div class="stop-dot dim"></div><span>Av. Cañoto y Suárez</span></div>
-                            <div class="stop-row"><div class="stop-line"></div></div>
-                            <div class="stop-row"><div class="stop-dot dim"></div><span>Plaza Principal</span></div>
-                            <div class="stop-row"><div class="stop-line"></div></div>
-                            <div class="stop-row"><div class="stop-dot dim"></div><span>Mercado Los Pozos</span></div>
-                            <div class="stop-row"><div class="stop-line"></div></div>
-                            <div class="stop-row"><div class="stop-dot"></div><span>Centro Comercial</span></div>
-                        </div>
+                @endif
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section con fondo GIF de tráfico vehicular y overlay azul/guindo -->
+    <section class="hero-section">
+        <div class="hero-overlay"></div>
+        <div class="container hero-content">
+            <div class="row align-items-center">
+                <div class="col-lg-10">
+                    <!-- Badge Superior -->
+                    <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill mb-3" 
+                         style="background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); border: 1.5px solid rgba(255,255,255,0.35);">
+                        <i class="bi bi-broadcast text-info"></i>
+                        <span class="text-white small fw-bold tracking-wider text-uppercase" style="font-size: 0.78rem; letter-spacing: 0.08em;">
+                            Sistema Centralizado · Santa Cruz de la Sierra
+                        </span>
+                    </div>
+
+                    <!-- Título Principal -->
+                    <h1 class="display-4 fw-bold text-white mb-3" style="line-height: 1.15; letter-spacing: -0.8px;">
+                        Control y Monitoreo Inteligente de Microbuses en Tiempo Real
+                    </h1>
+
+                    <!-- Descripción -->
+                    <p class="text-white text-opacity-90 fs-5 mb-4" style="max-width: 680px; font-weight: 400; line-height: 1.6;">
+                        Plataforma integral para el seguimiento satelital de la flota, auditoría de paradas autorizadas, programación de turnos y control de recorridos de la <strong>Línea 61</strong>.
+                    </p>
+
+                    <!-- Botones de Acción Destacados -->
+                    <div class="d-flex flex-wrap gap-3 pt-2">
+                        @auth
+                            <a href="{{ url('/dashboard') }}" class="btn-hero-primary">
+                                <span>Ir al Panel de Control</span>
+                                <i class="bi bi-arrow-right"></i>
+                            </a>
+                        @else
+                            <a href="{{ route('login') }}" class="btn-hero-primary">
+                                <span>Acceder al Sistema</span>
+                                <i class="bi bi-arrow-right-circle"></i>
+                            </a>
+                            @if (Route::has('register'))
+                                <a href="{{ route('register') }}" class="btn-hero-secondary">
+                                    <i class="bi bi-person-plus"></i>
+                                    <span>Crear Cuenta</span>
+                                </a>
+                            @endif
+                        @endauth
                     </div>
                 </div>
-            </main>
+            </div>
         </div>
-    </body>
+    </section>
+
+    <!-- Cards de Módulos del Proyecto -->
+    <section class="container py-5 my-3">
+        <div class="text-center max-w-700 mx-auto mb-5">
+            <div class="d-inline-block badge px-3 py-1 rounded-2 mb-2" style="background: rgba(123, 30, 43, 0.1); color: var(--accent-guindo); font-weight: 700; font-size: 0.78rem;">
+                MÓDULOS DE CONTROL
+            </div>
+            <h2 class="fw-bold text-dark display-6 mb-2" style="letter-spacing: -0.5px;">
+                Gestión Operativa de la Línea 61
+            </h2>
+            <p class="text-muted fs-6 mb-0">
+                Herramientas diseñadas para la supervisión y despacho eficiente de microbuses en Santa Cruz.
+            </p>
+        </div>
+
+        <div class="row g-4">
+            <!-- Card 1: Monitoreo GPS -->
+            <div class="col-md-6 col-lg-4">
+                <article class="feature-card-custom">
+                    <div class="feature-icon-box icon-box-blue">
+                        <i class="bi bi-geo-alt-fill"></i>
+                    </div>
+                    <h4 class="fw-bold text-dark mb-2" style="font-size: 1.15rem;">Monitoreo Satelital GPS</h4>
+                    <p class="text-muted small mb-0" style="line-height: 1.6;">
+                        Seguimiento en mapa interactivo de las unidades en ruta, velocidad de desplazamiento, sentido de circulación y estado en tiempo real.
+                    </p>
+                </article>
+            </div>
+
+            <!-- Card 2: Control de Paradas -->
+            <div class="col-md-6 col-lg-4">
+                <article class="feature-card-custom">
+                    <div class="feature-icon-box icon-box-guindo">
+                        <i class="bi bi-pin-map-fill"></i>
+                    </div>
+                    <h4 class="fw-bold text-dark mb-2" style="font-size: 1.15rem;">Control de Paradas</h4>
+                    <p class="text-muted small mb-0" style="line-height: 1.6;">
+                        Registro y supervisión del cumplimiento de paradas obligatorias, cálculo de tiempos de llegada y detección inmediata de demoras.
+                    </p>
+                </article>
+            </div>
+
+            <!-- Card 3: Asignación de Turnos -->
+            <div class="col-md-6 col-lg-4">
+                <article class="feature-card-custom">
+                    <div class="feature-icon-box icon-box-blue">
+                        <i class="bi bi-calendar-check-fill"></i>
+                    </div>
+                    <h4 class="fw-bold text-dark mb-2" style="font-size: 1.15rem;">Asignación de Turnos</h4>
+                    <p class="text-muted small mb-0" style="line-height: 1.6;">
+                        Programación organizada de jornadas por turnos (mañana, tarde y noche), asociando cada número interno con su chofer correspondiente.
+                    </p>
+                </article>
+            </div>
+
+            <!-- Card 4: Flota de Microbuses -->
+            <div class="col-md-6 col-lg-4">
+                <article class="feature-card-custom">
+                    <div class="feature-icon-box icon-box-guindo">
+                        <i class="bi bi-bus-front-fill"></i>
+                    </div>
+                    <h4 class="fw-bold text-dark mb-2" style="font-size: 1.15rem;">Control de Flota</h4>
+                    <p class="text-muted small mb-0" style="line-height: 1.6;">
+                        Padrón digital de micros activos, números internos, placas, modelos, capacidad de pasajeros y vinculación con los propietarios.
+                    </p>
+                </article>
+            </div>
+
+            <!-- Card 5: Conductores y Personal -->
+            <div class="col-md-6 col-lg-4">
+                <article class="feature-card-custom">
+                    <div class="feature-icon-box icon-box-blue">
+                        <i class="bi bi-person-badge-fill"></i>
+                    </div>
+                    <h4 class="fw-bold text-dark mb-2" style="font-size: 1.15rem;">Conductores & Personal</h4>
+                    <p class="text-muted small mb-0" style="line-height: 1.6;">
+                        Gestión de fichas de choferes, licencias de conducir, teléfonos de contacto, historial de conducción y estado de asignación.
+                    </p>
+                </article>
+            </div>
+
+            <!-- Card 6: Rutas y Reportes -->
+            <div class="col-md-6 col-lg-4">
+                <article class="feature-card-custom">
+                    <div class="feature-icon-box icon-box-guindo">
+                        <i class="bi bi-signpost-2-fill"></i>
+                    </div>
+                    <h4 class="fw-bold text-dark mb-2" style="font-size: 1.15rem;">Rutas y Auditoría</h4>
+                    <p class="text-muted small mb-0" style="line-height: 1.6;">
+                        Definición de trazados de ida y vuelta, paradas intermedias, bitácora de recorridos y reportes estadísticos para administración.
+                    </p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="landing-footer">
+        <div class="container d-flex flex-column flex-md-row align-items-center justify-content-between gap-3 text-center text-md-start">
+            <div class="d-flex align-items-center gap-2">
+                <div class="brand-logo-badge" style="width: 36px; height: 36px;">
+                    <i class="bi bi-bus-front fs-5"></i>
+                </div>
+                <div>
+                    <span class="fw-bold text-white">Línea 61</span>
+                    <span class="text-white-50 small ms-2">· Sistema de Control y Monitoreo</span>
+                </div>
+            </div>
+            <div class="small text-white-50">
+                &copy; {{ date('Y') }} Línea 61 · Santa Cruz de la Sierra, Bolivia. Todos los derechos reservados.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>

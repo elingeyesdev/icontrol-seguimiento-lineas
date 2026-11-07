@@ -32,20 +32,38 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'apellido' => ['required', 'string', 'max:255'],
+            'ci' => ['required', 'string', 'max:255', 'unique:users,ci'],
+            'telefono' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        $autoVerify = (bool) config('linea61.auto_verify_email');
+
         $user = User::create([
             'name' => $request->name,
+            'apellido' => $request->apellido,
+            'ci' => $request->ci,
+            'telefono' => $request->telefono,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
 
-        event(new Registered($user));
+        if ($autoVerify) {
+            $user->markEmailAsVerified();
+        }
+
+        if (! $user->hasVerifiedEmail()) {
+            event(new Registered($user));
+        }
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        // Sin verificación por correo el usuario pasa directo a la pantalla
+        // de rol pendiente; el enlace firmado se conserva como respaldo.
+        return $autoVerify
+            ? redirect()->route('pending.role')
+            : redirect()->route('verification.notice');
     }
 }

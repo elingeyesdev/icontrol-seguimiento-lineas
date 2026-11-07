@@ -28,7 +28,15 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        $user = $request->user();
+
+        $redirectTo = match (true) {
+            ! $user || ! $user->hasVerifiedEmail() => route('verification.notice', absolute: false),
+            $user->roles()->doesntExist() => route('pending.role', absolute: false),
+            default => route('dashboard', absolute: false),
+        };
+
+        return redirect()->intended($redirectTo);
     }
 
     /**

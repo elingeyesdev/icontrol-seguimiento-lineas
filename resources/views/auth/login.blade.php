@@ -1,47 +1,94 @@
-<x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+<x-guest-layout title="Iniciar sesión">
+    <div class="auth-shell">
+        <section class="auth-hero auth-hero--login" aria-label="Información del sistema">
+            <div class="auth-hero-overlay" aria-hidden="true"></div>
 
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
+            <div class="auth-hero-content">
+                <x-auth-brand />
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
+                <div class="auth-hero-footer">
+                    <span class="auth-hero-note">
+                        <i class="bi bi-broadcast" aria-hidden="true"></i>
+                        Monitoreo satelital en tiempo real
+                    </span>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+                    <div class="auth-hero-meta">
+                        <span>Santa Cruz · Bolivia</span>
+                        <span>
+                            <i class="bi bi-shield-check" aria-hidden="true"></i>
+                            Acceso seguro
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
+        <section class="auth-panel">
+            <div class="auth-panel-inner">
+                <x-auth-brand compact class="auth-panel-brand" />
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
+                <x-auth-heading
+                    eyebrow="Línea 61 · Control operativo"
+                    title="Iniciar sesión"
+                    description="Ingresa para administrar la operación diaria de la línea."
+                />
 
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800" name="remember">
-                <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Remember me') }}</span>
-            </label>
-        </div>
+                @if (session('status'))
+                    <x-auth-status type="success">{{ session('status') }}</x-auth-status>
+                @endif
 
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
-            @endif
+                <form method="POST" action="{{ route('login') }}">
+                    @csrf
 
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
-        </div>
-    </form>
+                    <x-auth-field
+                        name="email"
+                        label="Correo electrónico"
+                        type="email"
+                        icon="bi-envelope"
+                        placeholder="usuario@correo.com"
+                        autocomplete="username"
+                        :required="true"
+                        :autofocus="true"
+                    />
+
+                    <x-auth-field
+                        name="password"
+                        label="Contraseña"
+                        type="password"
+                        icon="bi-lock"
+                        placeholder="••••••••"
+                        autocomplete="current-password"
+                        :required="true"
+                    />
+
+                    <div class="auth-row">
+                        <div class="auth-check">
+                            <input id="remember_me" type="checkbox" name="remember">
+                            <label for="remember_me">Recordarme</label>
+                        </div>
+
+                        @if (Route::has('password.request'))
+                            <a class="auth-link" href="{{ route('password.request') }}">
+                                ¿Olvidaste tu contraseña?
+                            </a>
+                        @endif
+                    </div>
+
+                    <button type="submit" class="auth-btn auth-btn--primary auth-btn--block">
+                        Ingresar
+                        <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                    </button>
+
+                    @if (Route::has('register'))
+                        <div class="auth-divider"><span>o</span></div>
+
+                        <a href="{{ route('register') }}" class="auth-btn auth-btn--secondary auth-btn--block">
+                            <i class="bi bi-person-plus" aria-hidden="true"></i>
+                            Crear cuenta
+                        </a>
+                    @endif
+                </form>
+            </div>
+        </section>
+    </div>
 </x-guest-layout>
