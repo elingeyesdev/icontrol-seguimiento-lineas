@@ -4,6 +4,8 @@ use App\Http\Controllers\AsignacionTurnoController;
 use App\Http\Controllers\ConductorController;
 use App\Http\Controllers\ControlRecorridoController;
 use App\Http\Controllers\InternoController;
+use App\Http\Controllers\Kpis\CumplimientoParadasController;
+use App\Http\Controllers\Kpis\TiempoPromedioRecorridoController;
 use App\Http\Controllers\MicroController;
 use App\Http\Controllers\MonitoreoController;
 use App\Http\Controllers\ParadaController;
@@ -29,8 +31,46 @@ Route::get('/dashboard', function () {
     $conductoresDisponibles = Conductor::where('estado', 'activo')->count();
     $recorridosActivos = AsignacionTurno::where('fecha', now()->toDateString())->whereIn('estado', ['en_curso', 'pendiente', 'retrasado'])->count();
     $microsFueraServicio = Micro::where('estado', '!=', 'activo')->count();
+    $usuario = request()->user();
 
-    return view('dashboard', compact('microsActivos', 'conductoresDisponibles', 'recorridosActivos', 'microsFueraServicio'));
+    $tarjetas = [
+        'Seguridad' => [
+            ['titulo' => 'Usuarios', 'descripcion' => 'Administrar usuarios del sistema.', 'icono' => 'bi-people', 'ruta' => 'users.index', 'roles' => ['admin', 'propietario', 'fiscalizador']],
+            ['titulo' => 'Roles', 'descripcion' => 'Gestionar roles y permisos.', 'icono' => 'bi-shield', 'ruta' => 'roles.index', 'roles' => ['admin', 'fiscalizador']],
+            ['titulo' => 'Asignar roles', 'descripcion' => 'Asignar roles a los usuarios.', 'icono' => 'bi-person-gear', 'ruta' => 'roles.assign', 'roles' => ['admin', 'fiscalizador']],
+        ],
+        'Parametrización' => [
+            ['titulo' => 'Propietarios', 'descripcion' => 'Gestionar propietarios de micros.', 'icono' => 'bi-person-vcard', 'ruta' => 'propietario.index'],
+            ['titulo' => 'Internos', 'descripcion' => 'Gestionar números internos.', 'icono' => 'bi-hdd-stack', 'ruta' => 'interno.index'],
+            ['titulo' => 'Micros', 'descripcion' => 'Gestionar la flota registrada.', 'icono' => 'bi-bus-front', 'ruta' => 'micro.index'],
+            ['titulo' => 'Conductores', 'descripcion' => 'Gestionar conductores.', 'icono' => 'bi-person-badge', 'ruta' => 'conductor.index'],
+            ['titulo' => 'Rutas', 'descripcion' => 'Gestionar rutas operativas.', 'icono' => 'bi-signpost-2', 'ruta' => 'ruta.index'],
+            ['titulo' => 'Paradas', 'descripcion' => 'Gestionar paradas de las rutas.', 'icono' => 'bi-geo-alt', 'ruta' => 'parada.index'],
+            ['titulo' => 'Turnos', 'descripcion' => 'Gestionar horarios y turnos.', 'icono' => 'bi-clock', 'ruta' => 'turno.index'],
+        ],
+        'Transacciones' => [
+            ['titulo' => 'Asignación de turnos', 'descripcion' => 'Asignar conductores y micros.', 'icono' => 'bi-calendar2-check', 'ruta' => 'asignacion-turno.index'],
+            ['titulo' => 'Control de recorrido', 'descripcion' => 'Supervisar el cumplimiento del recorrido.', 'icono' => 'bi-signpost-split', 'ruta' => 'control-recorrido.index'],
+            ['titulo' => 'Seguimiento GPS', 'descripcion' => 'Consultar la ubicación de las unidades.', 'icono' => 'bi-geo-alt', 'ruta' => 'monitoreo.index'],
+        ],
+        'Reportes' => [
+            ['titulo' => 'Asignaciones por conductor', 'descripcion' => 'Consultar asignaciones agrupadas.', 'icono' => 'bi-file-earmark-person', 'ruta' => 'reportes.show', 'parametros' => ['reporte' => 'asignaciones-conductor']],
+            ['titulo' => 'Micros por propietario', 'descripcion' => 'Consultar micros registrados por propietario.', 'icono' => 'bi-file-earmark-spreadsheet', 'ruta' => 'reportes.show', 'parametros' => ['reporte' => 'micros-propietario']],
+            ['titulo' => 'Paradas omitidas', 'descripcion' => 'Consultar paradas no cumplidas.', 'icono' => 'bi-file-earmark-bar-graph', 'ruta' => 'reportes.show', 'parametros' => ['reporte' => 'paradas-omitidas']],
+        ],
+        'Estadísticas y KPIs' => [
+            ['titulo' => 'Tiempo promedio de recorrido', 'descripcion' => 'Analizar la duración de recorridos válidos.', 'icono' => 'bi-stopwatch', 'ruta' => 'kpis.tiempo-promedio-recorrido.index'],
+            ['titulo' => 'Cumplimiento de paradas', 'descripcion' => 'Analizar el cumplimiento de paradas.', 'icono' => 'bi-check2-circle', 'ruta' => 'kpis.cumplimiento-paradas.index'],
+        ],
+    ];
+
+    foreach ($tarjetas as $modulo => $items) {
+        $tarjetas[$modulo] = array_values(array_filter($items, function (array $tarjeta) use ($usuario) {
+            return ! isset($tarjeta['roles']) || $usuario->hasRole($tarjeta['roles']);
+        }));
+    }
+
+    return view('dashboard', compact('microsActivos', 'conductoresDisponibles', 'recorridosActivos', 'microsFueraServicio', 'tarjetas', 'usuario'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -60,6 +100,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
 
         Route::middleware('role:admin|propietario|fiscalizador')->group(function () {
+            Route::prefix('kpis')->name('kpis.')->group(function () {
+                Route::get('/tiempo-promedio-recorrido', [TiempoPromedioRecorridoController::class, 'index'])
+                    ->name('tiempo-promedio-recorrido.index');
+                Route::get('/cumplimiento-paradas', [CumplimientoParadasController::class, 'index'])
+                    ->name('cumplimiento-paradas.index');
+            });
             Route::resource('conductor', ConductorController::class);
             Route::resource('propietario', PropietarioController::class);
             Route::resource('micro', MicroController::class);

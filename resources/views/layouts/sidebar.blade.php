@@ -55,6 +55,15 @@
         <a class="nav-link" href="#">
             <i class="bi bi-bar-chart-line-fill me-2"></i> Reportes Generales
         </a>
+
+        <!-- Estadísticas y KPIs -->
+        <div class="menu-header">Estadísticas y KPIs</div>
+        <a class="nav-link {{ request()->routeIs('kpis.tiempo-promedio-recorrido.*') ? 'active' : '' }}" href="{{ route('kpis.tiempo-promedio-recorrido.index') }}">
+            <i class="bi bi-stopwatch me-2"></i> Tiempo promedio de recorrido
+        </a>
+        <a class="nav-link {{ request()->routeIs('kpis.cumplimiento-paradas.*') ? 'active' : '' }}" href="{{ route('kpis.cumplimiento-paradas.index') }}">
+            <i class="bi bi-check2-circle me-2"></i> Cumplimiento de paradas
+        </a>
     </div>
     
     <!-- Footer / Info -->

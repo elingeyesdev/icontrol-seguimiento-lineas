@@ -161,6 +161,33 @@
     </div>
     @endif
 
+    {{-- MÓDULO 5: ESTADÍSTICAS Y KPIs --}}
+    @if(Auth::user()->hasRole(['admin', 'propietario', 'fiscalizador']))
+    @php
+        $kpisActive = request()->routeIs('kpis.*');
+    @endphp
+    <a class="nav-link {{ $kpisActive ? 'active' : '' }}"
+       data-bs-toggle="collapse"
+       href="#kpisSubmenu"
+       role="button"
+       aria-expanded="{{ $kpisActive ? 'true' : 'false' }}"
+       aria-controls="kpisSubmenu">
+        <i class="bi bi-graph-up-arrow" aria-hidden="true"></i>
+        <span>Estadísticas y KPIs</span>
+        <i class="bi bi-caret-down-fill" aria-hidden="true"></i>
+    </a>
+    <div class="collapse submenu {{ $kpisActive ? 'show' : '' }}" id="kpisSubmenu">
+        <a class="nav-link {{ request()->routeIs('kpis.tiempo-promedio-recorrido.*') ? 'active' : '' }}"
+           href="{{ route('kpis.tiempo-promedio-recorrido.index') }}">
+            <i class="bi bi-stopwatch" aria-hidden="true"></i><span>Tiempo promedio de recorrido</span>
+        </a>
+        <a class="nav-link {{ request()->routeIs('kpis.cumplimiento-paradas.*') ? 'active' : '' }}"
+           href="{{ route('kpis.cumplimiento-paradas.index') }}">
+            <i class="bi bi-check2-circle" aria-hidden="true"></i><span>Cumplimiento de paradas</span>
+        </a>
+    </div>
+    @endif
+
     <div class="menu-title">Configuración</div>
     <a class="nav-link {{ request()->routeIs('profile.edit') ? 'active' : '' }}" href="{{ route('profile.edit') }}"
        @if(request()->routeIs('profile.edit')) aria-current="page" @endif>
