@@ -15,7 +15,7 @@ RUN composer install --no-dev --no-interaction --no-progress --prefer-dist --opt
 FROM php:8.4-apache
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends libfreetype6-dev libjpeg62-turbo-dev libpng-dev libzip-dev libpq-dev \
+    && apt-get install -y --no-install-recommends pkg-config libfreetype6-dev libjpeg62-turbo-dev libpng-dev libzip-dev libpq-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install bcmath gd mbstring pdo_mysql pdo_pgsql zip opcache \
     && a2enmod rewrite headers \
