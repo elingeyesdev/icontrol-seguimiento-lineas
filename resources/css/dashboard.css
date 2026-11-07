@@ -1,5 +1,107 @@
 /* Panel de control operativo — estilos específicos del tablero. */
 
+.dashboard-welcome {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--surface-panel);
+    border: 1px solid var(--border-subtle);
+    border-left: 4px solid var(--brand-wine);
+    border-radius: var(--radius-md);
+    padding: 1.25rem 1.5rem;
+}
+
+.dashboard-welcome__eyebrow {
+    color: var(--brand-wine);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.dashboard-welcome__title {
+    color: var(--primary);
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.dashboard-welcome__role {
+    color: var(--text-secondary);
+}
+
+.dashboard-module {
+    margin-bottom: 1.5rem;
+}
+
+.dashboard-module__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.dashboard-module-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    min-height: 122px;
+    position: relative;
+    height: 100%;
+    padding: 1rem;
+    color: var(--text-primary);
+    text-decoration: none;
+    background: var(--surface-panel);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.dashboard-module-card:hover {
+    color: var(--text-primary);
+    border-color: var(--primary);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.dashboard-module-card__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    color: #fff;
+    background: var(--primary);
+    border-radius: var(--radius-sm);
+    font-size: 1.1rem;
+}
+
+.dashboard-module-card__content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    padding-right: 1rem;
+}
+
+.dashboard-module-card__title {
+    font-weight: 700;
+}
+
+.dashboard-module-card__description {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    line-height: 1.35;
+}
+
+.dashboard-module-card__arrow {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    color: var(--brand-wine);
+}
+
 .dashboard-metric {
     font-size: 2rem;
     font-weight: 600;

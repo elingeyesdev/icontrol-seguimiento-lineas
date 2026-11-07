@@ -21,6 +21,10 @@
 /storage/api-docs/*.yaml
 /storage/pail
 /vendor
+*.pdf
+*.doc
+*.docx
+~$*
 Homestead.json
 Homestead.yaml
 Thumbs.db
